@@ -17,12 +17,12 @@
     "axios": "^1.18.1",
     "dotenv": "^16.4.7",
     "eventsource": "^4.0.0",
-    "express": "^5.2.1"
-  },
-  "devDependencies": {
-    "@types/node": "^22.13.4",
+    "express": "^5.2.1",
     "tsx": "^4.19.0",
     "typescript": "^5.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.4"
   },
   "engines": {
     "node": ">=20"
