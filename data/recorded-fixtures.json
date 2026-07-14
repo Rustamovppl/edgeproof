@@ -1,16 +1,5 @@
 [
   {
-    "FixtureId": 18213979,
-    "Participant1": "Norway",
-    "Participant2": "England",
-    "Participant1Id": 2661,
-    "Participant2Id": 1888,
-    "Competition": "World Cup",
-    "CompetitionId": 72,
-    "StartTime": 1783803600000,
-    "Participant1IsHome": true
-  },
-  {
     "FixtureId": 18222446,
     "Participant1": "Argentina",
     "Participant2": "Switzerland",

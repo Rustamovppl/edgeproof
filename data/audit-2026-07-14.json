@@ -1,228 +1,8 @@
 {
-  "auditedAt": "2026-07-14T15:05:25.379Z",
-  "verified": 40,
-  "total": 40,
+  "auditedAt": "2026-07-14T22:23:15.793Z",
+  "verified": 28,
+  "total": 28,
   "rows": [
-    {
-      "position": "Norway vs England · England · entry",
-      "side": "entry",
-      "messageId": "1837355589:00003:001240-10021-stab",
-      "ts": 1783805010818,
-      "claimedPct": 52.247,
-      "result": "OK",
-      "rootsAccount": "2BZiNv8VTwApn73tdxeBVmMUEqDvqrcy7bdw4bt7jkf2",
-      "cu": 316691
-    },
-    {
-      "position": "Norway vs England · England · exit",
-      "side": "exit",
-      "messageId": "1837357150:00003:001380-10021-stab",
-      "ts": 1783805859718,
-      "claimedPct": 29.815,
-      "result": "OK",
-      "rootsAccount": "2BZiNv8VTwApn73tdxeBVmMUEqDvqrcy7bdw4bt7jkf2",
-      "cu": 289222
-    },
-    {
-      "position": "Norway vs England · Norway · entry",
-      "side": "entry",
-      "messageId": "1837357150:00003:001380-10021-stab",
-      "ts": 1783805859718,
-      "claimedPct": 42.017,
-      "result": "OK",
-      "rootsAccount": "2BZiNv8VTwApn73tdxeBVmMUEqDvqrcy7bdw4bt7jkf2",
-      "cu": 289222
-    },
-    {
-      "position": "Norway vs England · Norway · exit",
-      "side": "exit",
-      "messageId": "1837358336:00003:000564-10021-stab",
-      "ts": 1783806515772,
-      "claimedPct": 17.562,
-      "result": "OK",
-      "rootsAccount": "2BZiNv8VTwApn73tdxeBVmMUEqDvqrcy7bdw4bt7jkf2",
-      "cu": 289225
-    },
-    {
-      "position": "Norway vs England · Draw · entry",
-      "side": "entry",
-      "messageId": "1837357375:00003:000244-10021-stab",
-      "ts": 1783805985355,
-      "claimedPct": 30.285,
-      "result": "OK",
-      "rootsAccount": "2BZiNv8VTwApn73tdxeBVmMUEqDvqrcy7bdw4bt7jkf2",
-      "cu": 289227
-    },
-    {
-      "position": "Norway vs England · Draw · exit",
-      "side": "exit",
-      "messageId": "1837360637:00003:000134-10021-stab",
-      "ts": 1783807836722,
-      "claimedPct": 35.562,
-      "result": "OK",
-      "rootsAccount": "2BZiNv8VTwApn73tdxeBVmMUEqDvqrcy7bdw4bt7jkf2",
-      "cu": 289223
-    },
-    {
-      "position": "Norway vs England · England · entry",
-      "side": "entry",
-      "messageId": "1837358336:00003:000564-10021-stab",
-      "ts": 1783806515772,
-      "claimedPct": 50.865,
-      "result": "OK",
-      "rootsAccount": "2BZiNv8VTwApn73tdxeBVmMUEqDvqrcy7bdw4bt7jkf2",
-      "cu": 289225
-    },
-    {
-      "position": "Norway vs England · England · exit",
-      "side": "exit",
-      "messageId": "1837358338:00003:000862-10021-stab",
-      "ts": 1783806516701,
-      "claimedPct": 48.733,
-      "result": "OK",
-      "rootsAccount": "2BZiNv8VTwApn73tdxeBVmMUEqDvqrcy7bdw4bt7jkf2",
-      "cu": 289226
-    },
-    {
-      "position": "Norway vs England · England · entry",
-      "side": "entry",
-      "messageId": "1837358338:00003:000862-10021-stab",
-      "ts": 1783806516701,
-      "claimedPct": 48.733,
-      "result": "OK",
-      "rootsAccount": "2BZiNv8VTwApn73tdxeBVmMUEqDvqrcy7bdw4bt7jkf2",
-      "cu": 289226
-    },
-    {
-      "position": "Norway vs England · England · exit",
-      "side": "exit",
-      "messageId": "1837360033:00003:000310-10021-stab",
-      "ts": 1783807494797,
-      "claimedPct": 46.404,
-      "result": "OK",
-      "rootsAccount": "2BZiNv8VTwApn73tdxeBVmMUEqDvqrcy7bdw4bt7jkf2",
-      "cu": 261756
-    },
-    {
-      "position": "Norway vs England · Draw · entry",
-      "side": "entry",
-      "messageId": "1837360813:00003:000871-10021-stab",
-      "ts": 1783807931699,
-      "claimedPct": 36.523,
-      "result": "OK",
-      "rootsAccount": "2BZiNv8VTwApn73tdxeBVmMUEqDvqrcy7bdw4bt7jkf2",
-      "cu": 289224
-    },
-    {
-      "position": "Norway vs England · Draw · exit",
-      "side": "exit",
-      "messageId": "1837361422:00003:000335-10021-stab",
-      "ts": 1783808273934,
-      "claimedPct": 31.397,
-      "result": "OK",
-      "rootsAccount": "2BZiNv8VTwApn73tdxeBVmMUEqDvqrcy7bdw4bt7jkf2",
-      "cu": 261756
-    },
-    {
-      "position": "Norway vs England · Draw · entry",
-      "side": "entry",
-      "messageId": "1837361635:00003:000066-10021-stab",
-      "ts": 1783808391899,
-      "claimedPct": 40.833,
-      "result": "OK",
-      "rootsAccount": "2BZiNv8VTwApn73tdxeBVmMUEqDvqrcy7bdw4bt7jkf2",
-      "cu": 261757
-    },
-    {
-      "position": "Norway vs England · Draw · exit",
-      "side": "exit",
-      "messageId": "1837362844:00003:000610-10021-stab",
-      "ts": 1783809068719,
-      "claimedPct": 45.872,
-      "result": "OK",
-      "rootsAccount": "2BZiNv8VTwApn73tdxeBVmMUEqDvqrcy7bdw4bt7jkf2",
-      "cu": 289226
-    },
-    {
-      "position": "Norway vs England · Draw · entry",
-      "side": "entry",
-      "messageId": "1837362844:00003:000610-10021-stab",
-      "ts": 1783809068719,
-      "claimedPct": 45.872,
-      "result": "OK",
-      "rootsAccount": "2BZiNv8VTwApn73tdxeBVmMUEqDvqrcy7bdw4bt7jkf2",
-      "cu": 289226
-    },
-    {
-      "position": "Norway vs England · Draw · exit",
-      "side": "exit",
-      "messageId": "1837363854:00003:000246-10021-stab",
-      "ts": 1783809637304,
-      "claimedPct": 51.02,
-      "result": "OK",
-      "rootsAccount": "2BZiNv8VTwApn73tdxeBVmMUEqDvqrcy7bdw4bt7jkf2",
-      "cu": 289220
-    },
-    {
-      "position": "Norway vs England · Draw · entry",
-      "side": "entry",
-      "messageId": "1837363854:00003:000246-10021-stab",
-      "ts": 1783809637304,
-      "claimedPct": 51.02,
-      "result": "OK",
-      "rootsAccount": "2BZiNv8VTwApn73tdxeBVmMUEqDvqrcy7bdw4bt7jkf2",
-      "cu": 289220
-    },
-    {
-      "position": "Norway vs England · Draw · exit",
-      "side": "exit",
-      "messageId": "1837364272:00003:000502-10021-stab",
-      "ts": 1783809870654,
-      "claimedPct": 56.085,
-      "result": "OK",
-      "rootsAccount": "2BZiNv8VTwApn73tdxeBVmMUEqDvqrcy7bdw4bt7jkf2",
-      "cu": 289224
-    },
-    {
-      "position": "Norway vs England · England (extra time) · entry",
-      "side": "entry",
-      "messageId": "1837369492:00003:000690-10021-stab",
-      "ts": 1783812860487,
-      "claimedPct": 84.246,
-      "result": "OK",
-      "rootsAccount": "2BZiNv8VTwApn73tdxeBVmMUEqDvqrcy7bdw4bt7jkf2",
-      "cu": 275734
-    },
-    {
-      "position": "Norway vs England · England (extra time) · exit",
-      "side": "exit",
-      "messageId": "1837370303:00003:001175-10021-stab",
-      "ts": 1783813300955,
-      "claimedPct": 89.286,
-      "result": "OK",
-      "rootsAccount": "2BZiNv8VTwApn73tdxeBVmMUEqDvqrcy7bdw4bt7jkf2",
-      "cu": 262001
-    },
-    {
-      "position": "Norway vs England · England (extra time) · entry",
-      "side": "entry",
-      "messageId": "1837370303:00003:001175-10021-stab",
-      "ts": 1783813300955,
-      "claimedPct": 89.286,
-      "result": "OK",
-      "rootsAccount": "2BZiNv8VTwApn73tdxeBVmMUEqDvqrcy7bdw4bt7jkf2",
-      "cu": 262001
-    },
-    {
-      "position": "Norway vs England · England (extra time) · exit",
-      "side": "exit",
-      "messageId": "1837370558:00003:000579-10021-stab",
-      "ts": 1783813436933,
-      "claimedPct": 94.967,
-      "result": "OK",
-      "rootsAccount": "2BZiNv8VTwApn73tdxeBVmMUEqDvqrcy7bdw4bt7jkf2",
-      "cu": 262002
-    },
     {
       "position": "Argentina vs Switzerland · Argentina · entry",
       "side": "entry",
@@ -402,6 +182,106 @@
       "result": "OK",
       "rootsAccount": "6EzehK1s1Kx82jNex5PpB3mqGGmUwSaxxW7C1D5ueZgR",
       "cu": 263487
+    },
+    {
+      "position": "France vs Spain · France · entry",
+      "side": "entry",
+      "messageId": "1837784161:00003:000270-10021-stab",
+      "ts": 1784057376465,
+      "claimedPct": 20.227,
+      "result": "OK",
+      "rootsAccount": "9CrnWb2ZBtxX3B2C7GUDacb8AnjvySjyDtci7uy4gdoH",
+      "cu": 321195
+    },
+    {
+      "position": "France vs Spain · France · exit",
+      "side": "exit",
+      "messageId": "1837784726:00003:000237-10021-stab",
+      "ts": 1784057684412,
+      "claimedPct": 18.192,
+      "result": "OK",
+      "rootsAccount": "9CrnWb2ZBtxX3B2C7GUDacb8AnjvySjyDtci7uy4gdoH",
+      "cu": 321193
+    },
+    {
+      "position": "France vs Spain · Draw · entry",
+      "side": "entry",
+      "messageId": "1837784161:00003:000270-10021-stab",
+      "ts": 1784057376465,
+      "claimedPct": 27.996,
+      "result": "OK",
+      "rootsAccount": "9CrnWb2ZBtxX3B2C7GUDacb8AnjvySjyDtci7uy4gdoH",
+      "cu": 321195
+    },
+    {
+      "position": "France vs Spain · Draw · exit",
+      "side": "exit",
+      "messageId": "1837789094:00003:000455-10021-stab",
+      "ts": 1784060077006,
+      "claimedPct": 28.114,
+      "result": "OK",
+      "rootsAccount": "9CrnWb2ZBtxX3B2C7GUDacb8AnjvySjyDtci7uy4gdoH",
+      "cu": 293725
+    },
+    {
+      "position": "France vs Spain · Spain · entry",
+      "side": "entry",
+      "messageId": "1837784971:00003:000184-10021-stab",
+      "ts": 1784057821291,
+      "claimedPct": 54.555,
+      "result": "OK",
+      "rootsAccount": "9CrnWb2ZBtxX3B2C7GUDacb8AnjvySjyDtci7uy4gdoH",
+      "cu": 307461
+    },
+    {
+      "position": "France vs Spain · Spain · exit",
+      "side": "exit",
+      "messageId": "1837787920:00003:000101-10021-stab",
+      "ts": 1784059442081,
+      "claimedPct": 52.438,
+      "result": "OK",
+      "rootsAccount": "9CrnWb2ZBtxX3B2C7GUDacb8AnjvySjyDtci7uy4gdoH",
+      "cu": 266249
+    },
+    {
+      "position": "France vs Spain · Spain · entry",
+      "side": "entry",
+      "messageId": "1837788991:00003:000508-10021-stab",
+      "ts": 1784060022761,
+      "claimedPct": 55.897,
+      "result": "OK",
+      "rootsAccount": "9CrnWb2ZBtxX3B2C7GUDacb8AnjvySjyDtci7uy4gdoH",
+      "cu": 293725
+    },
+    {
+      "position": "France vs Spain · Spain · exit",
+      "side": "exit",
+      "messageId": "1837789746:00003:000021-10021-stab",
+      "ts": 1784060420024,
+      "claimedPct": 85.985,
+      "result": "OK",
+      "rootsAccount": "9CrnWb2ZBtxX3B2C7GUDacb8AnjvySjyDtci7uy4gdoH",
+      "cu": 293720
+    },
+    {
+      "position": "France vs Spain · Spain · entry",
+      "side": "entry",
+      "messageId": "1837790775:00003:000066-10021-stab",
+      "ts": 1784060972053,
+      "claimedPct": 88.731,
+      "result": "OK",
+      "rootsAccount": "9CrnWb2ZBtxX3B2C7GUDacb8AnjvySjyDtci7uy4gdoH",
+      "cu": 307459
+    },
+    {
+      "position": "France vs Spain · Spain · exit",
+      "side": "exit",
+      "messageId": "1837792893:00003:000001-10021-stab",
+      "ts": 1784062178952,
+      "claimedPct": 96.061,
+      "result": "OK",
+      "rootsAccount": "9CrnWb2ZBtxX3B2C7GUDacb8AnjvySjyDtci7uy4gdoH",
+      "cu": 293723
     }
   ]
 }

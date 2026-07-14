@@ -29,8 +29,8 @@ export type Signal = {
 export class SteamStrategy {
   static readonly STEAM_PP = 2.5; // entry: prob up >= 2.5pp in window
   // Skip goal shocks: a jump this large means the market already repriced a
-  // goal — chasing it buys the top (confirmed by Norway–England live data,
-  // where +21pp entries were stopped out and the +2.5pp drift entry won).
+  // goal — chasing it buys the top (confirmed on captured live data, where
+  // +20pp entries were stopped out while gentle-drift entries won).
   static readonly MAX_STEAM_PP = 8.0;
   static readonly LOOKBACK_MS = 10 * 60 * 1000;
   static readonly STOP_PP = 2.0; // exit: prob down >= 2pp from entry

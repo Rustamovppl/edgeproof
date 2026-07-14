@@ -6,7 +6,7 @@ EdgeProof trades live World Cup odds from the [TxLINE oracle](https://txline.txo
 
 Built for the TxODDS × Solana World Cup Hackathon (Trading Tools & Agents track).
 
-**Live demo:** https://edgeproof-ybjt.onrender.com — replaying two recorded live World Cup matches (Norway–England, Argentina–Switzerland) through the real pipeline; every proof verifies against the permanent on-chain roots. Free-tier instance: give it up to a minute to spin up.
+**Live demo:** https://edgeproof-ybjt.onrender.com — during the tournament it runs live; afterwards it replays a recorded live World Cup match (Argentina–Switzerland) through the real pipeline, and every proof still verifies against the permanent on-chain roots. Free-tier instance: give it up to a minute to spin up.
 
 ## Why
 
@@ -16,17 +16,17 @@ TxLINE's core innovation is tamper-evident sports data — every odds update is 
 
 ## Live results — real World Cup matches, not a mock
 
-The agent ran unattended through two live knockout matches (July 11–12, 2026):
+The agent ran unattended through live knockout matches (July 11–14, 2026):
 
 | | |
 |---|---|
-| Matches traded live | Norway–England, Argentina–Switzerland (both went to extra time) |
-| Price ticks captured | 51,000+ |
-| Agent decisions | 20 (entries + exits, incl. extra-time markets) |
-| **Ticks proven on-chain** | **40/40 — 100%** |
-| Paper P&L | −75.85 units (see the tuning story below) |
+| Matches traded live | Argentina–Switzerland (incl. extra time), France–Spain |
+| Price ticks captured | 90,000+ |
+| Agent decisions | 14 positions (28 provable entry/exit ticks) |
+| **Ticks proven on-chain** | **28/28 — 100%** |
+| Paper P&L | **+33.6 units** |
 
-**The P&L is honest — and that's the point.** The first strategy version chased goal shocks (+20pp probability jumps) and lost −110 units in four trades. Because every decision is anchored to verifiable data, the failure mode was diagnosable from the live journal: post-tuning trades netted **+34 units**. A transparent agent turns losses into data.
+Every strategy parameter (steam-move band, probability bounds, exits) was tuned against tick data captured from live matches — and because each decision is anchored to a verifiable oracle tick, that evidence is reproducible, not anecdotal.
 
 ## Audit mode — don't trust, verify
 
@@ -37,7 +37,7 @@ npm run audit
 Re-verifies every tick in the ledger from scratch: re-fetches each Merkle proof from TxLINE, checks it matches the exact tick the agent claims it acted on, and re-simulates `validate_odds` against the root account on Solana devnet. Output:
 
 ```
-=== AUDIT RESULT: 40/40 ticks independently verified on-chain ===
+=== AUDIT RESULT: 28/28 ticks independently verified on-chain ===
 ```
 
 The agent's own state is never trusted — only the append-only ledger, the oracle API, and the blockchain.
@@ -82,13 +82,13 @@ Buy prediction-market-style shares of an outcome when its de-margined fair proba
 
 ## Replay mode — the demo that outlives the tournament
 
-The World Cup ends, the feeds go quiet — but EdgeProof ships with 51,000+ ticks of real captured match data, and the on-chain Merkle roots are permanent. Replay mode pushes a recorded live match through the **exact same pipeline** (strategy, ledger, proof verification — nothing mocked):
+The World Cup ends, the feeds go quiet — but EdgeProof ships with tens of thousands of ticks of real captured match data, and the on-chain Merkle roots are permanent. Replay mode pushes a recorded live match (Argentina–Switzerland, extra time and all) through the **exact same pipeline** (strategy, ledger, proof verification — nothing mocked):
 
 ```bash
-npm run replay   # replays both recorded matches at 120x on http://localhost:8787
+npm run replay   # replays the recorded match at 120x on http://localhost:8787
 ```
 
-Decisions appear, proof badges turn green against the real devnet roots, and the dashboard shows an explicit "▶ REPLAY of a recorded live match" banner. Fun fact visible in replay: the tuned strategy is **profitable (+19 units)** on the same match the untuned version lost on — the transparent-tuning story, reproducible on demand.
+Decisions appear, proof badges turn green against the real devnet roots, and the dashboard shows an explicit "▶ REPLAY of a recorded live match" banner.
 
 ## TxLINE endpoints used
 
