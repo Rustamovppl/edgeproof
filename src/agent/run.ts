@@ -199,9 +199,18 @@ app.get("/api/state", (_req, res) => {
     .filter((x) => x.fixture.Competition === "World Cup" || x.latest1x2)
     .sort((a, b) => a.fixture.StartTime - b.fixture.StartTime);
 
+  // The strategy was re-tuned live at 2026-07-11 22:13:58Z after the first
+  // night's goal-chasing losses; split P&L so the dashboard tells that story.
+  const TUNING_CUTOFF = 1783808038000;
+  const closed = ledger.all().filter((p) => p.status === "closed" && p.pnl !== undefined);
+  const pnlBefore = +closed.filter((p) => p.openedAt < TUNING_CUTOFF).reduce((s, p) => s + p.pnl!, 0).toFixed(2);
+  const pnlTuned = +closed.filter((p) => p.openedAt >= TUNING_CUTOFF).reduce((s, p) => s + p.pnl!, 0).toFixed(2);
+
   res.json({
     startedAt,
     replay: Boolean(REPLAY_FILE),
+    pnlBefore,
+    pnlTuned,
     now: Date.now(),
     totalTicks: store.totalTicks,
     pendingVerifications: verifier.pendingCount(),

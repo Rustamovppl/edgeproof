@@ -153,7 +153,7 @@
 <div class="stats">
   <div class="stat"><div class="v" id="s-ticks">—</div><div class="l">price ticks received</div></div>
   <div class="stat"><div class="v" id="s-positions">—</div><div class="l">agent decisions</div></div>
-  <div class="stat"><div class="v" id="s-pnl">—</div><div class="l">paper P&L, units</div></div>
+  <div class="stat"><div class="v" id="s-pnl">—</div><div class="l" id="s-pnl-label">paper P&L, units</div></div>
   <div class="stat"><div class="v" id="s-verified">—</div><div class="l">proved on-chain</div></div>
   <div class="stat"><div class="v" id="s-pending">—</div><div class="l">proofs in flight</div></div>
 </div>
@@ -216,6 +216,11 @@ function render(state) {
   const pnl = state.realizedPnl;
   $("s-pnl").textContent = (pnl > 0 ? "+" : "") + pnl;
   $("s-pnl").className = "v " + (pnl > 0 ? "up" : pnl < 0 ? "down" : "");
+  if (state.pnlBefore !== undefined && state.pnlBefore !== 0) {
+    $("s-pnl-label").innerHTML =
+      `paper P&L, units<br>v1: ${state.pnlBefore} · <b>tuned: ${state.pnlTuned > 0 ? "+" : ""}${state.pnlTuned}</b>`;
+    $("s-pnl-label").title = "The untuned v1 chased goal shocks on night one (−110); every trade since the live re-tune is included in the tuned figure. All entries are on-chain provable.";
+  }
   let verified = 0;
   for (const p of state.positions) {
     if (p.entry?.verification === "verified") verified++;
