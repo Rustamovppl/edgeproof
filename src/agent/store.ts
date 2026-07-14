@@ -66,6 +66,11 @@ export class TickStore {
     return arr[arr.length - 1];
   }
 
+  /** Drop all in-memory market history (used at replay loop restarts). */
+  reset(): void {
+    this.history.clear();
+  }
+
   fixtureIds(): number[] {
     return [...this.history.keys()];
   }

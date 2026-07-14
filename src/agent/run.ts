@@ -138,6 +138,33 @@ function sweepStalePositions() {
   }
 }
 
+/** Close whatever is still open at the recording's end, then wipe market history. */
+function onReplayLoop() {
+  for (const pos of ledger.open()) {
+    const last = store.latest(pos.fixtureId, pos.market ?? FT_1X2);
+    const idx = last ? last.PriceNames.indexOf(pos.outcome) : -1;
+    if (last && idx >= 0) {
+      pos.exit = tickRef(last, idx);
+      pos.pnl = SteamStrategy.pnl(pos.stake, pos.entry.pct, pos.exit.pct);
+    } else {
+      pos.pnl = 0;
+    }
+    pos.closedAt = Date.now();
+    pos.closeReason = "recording ended";
+    pos.status = "closed";
+    ledger.upsert(pos);
+    broadcast({ type: "close", position: pos });
+    if (pos.exit) {
+      const exit = pos.exit;
+      verifier.enqueue(exit, (ref) => {
+        ledger.upsert(pos);
+        broadcast({ type: "verification", positionId: pos.id, side: "exit", ref });
+      });
+    }
+  }
+  store.reset();
+}
+
 // ---------- HTTP API ----------
 const app = express();
 app.use(express.static(path.join(__dirname, "..", "..", "public")));
@@ -218,7 +245,13 @@ async function main() {
   });
 
   const stream = REPLAY_FILE
-    ? new ReplayStream(REPLAY_FILE, REPLAY_SPEED, onTick, (msg) => broadcast({ type: "status", msg }))
+    ? new ReplayStream(
+        REPLAY_FILE,
+        REPLAY_SPEED,
+        onTick,
+        (msg) => broadcast({ type: "status", msg }),
+        onReplayLoop
+      )
     : new OddsStream(onTick, (msg) => broadcast({ type: "status", msg }));
   await stream.start();
 }

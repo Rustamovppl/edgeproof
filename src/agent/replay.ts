@@ -17,7 +17,8 @@ export class ReplayStream {
     private file: string,
     private speed: number,
     private onTick: (t: Tick) => void,
-    private onStatus: (msg: string) => void
+    private onStatus: (msg: string) => void,
+    private onLoop?: () => void
   ) {}
 
   async start(): Promise<void> {
@@ -25,6 +26,9 @@ export class ReplayStream {
       this.onStatus(`REPLAY: ${this.file} at ${this.speed}x speed`);
       await this.playOnce();
       this.onStatus("REPLAY: recording finished — restarting from the top");
+      // The next pass starts before this one's ticks time-wise; without a
+      // reset the strategy would compute windows across the loop seam.
+      this.onLoop?.();
       await new Promise((r) => setTimeout(r, 10_000));
     }
   }
