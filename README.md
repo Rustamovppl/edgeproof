@@ -6,7 +6,7 @@ EdgeProof trades live World Cup odds from the [TxLINE oracle](https://txline.txo
 
 Built for the TxODDS × Solana World Cup Hackathon (Trading Tools & Agents track).
 
-**Live demo:** https://edgeproof-ybjt.onrender.com — replaying a recorded live World Cup match (Norway–England) through the real pipeline; every proof verifies against the permanent on-chain roots. Free-tier instance: give it up to a minute to spin up.
+**Live demo:** https://edgeproof-ybjt.onrender.com — replaying two recorded live World Cup matches (Norway–England, Argentina–Switzerland) through the real pipeline; every proof verifies against the permanent on-chain roots. Free-tier instance: give it up to a minute to spin up.
 
 ## Why
 
@@ -85,7 +85,7 @@ Buy prediction-market-style shares of an outcome when its de-margined fair proba
 The World Cup ends, the feeds go quiet — but EdgeProof ships with 51,000+ ticks of real captured match data, and the on-chain Merkle roots are permanent. Replay mode pushes a recorded live match through the **exact same pipeline** (strategy, ledger, proof verification — nothing mocked):
 
 ```bash
-npm run replay   # replays Norway–England at 60x on http://localhost:8787
+npm run replay   # replays both recorded matches at 120x on http://localhost:8787
 ```
 
 Decisions appear, proof badges turn green against the real devnet roots, and the dashboard shows an explicit "▶ REPLAY of a recorded live match" banner. Fun fact visible in replay: the tuned strategy is **profitable (+19 units)** on the same match the untuned version lost on — the transparent-tuning story, reproducible on demand.

@@ -10,7 +10,7 @@ services:
     startCommand: npx tsx src/agent/run.ts
     envVars:
       - key: REPLAY_FILE
-        value: data/replay-norway-england.jsonl.gz
+        value: data/replay-worldcup.jsonl.gz
       - key: REPLAY_SPEED
         value: "120"
       - key: LEDGER_FILE

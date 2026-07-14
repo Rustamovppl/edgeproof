@@ -8,7 +8,7 @@
     "probe": "tsx src/probe.ts",
     "agent": "tsx src/agent/run.ts",
     "audit": "tsx src/audit.ts",
-    "replay": "REPLAY_FILE=data/ticks-2026-07-11.jsonl REPLAY_SPEED=60 LEDGER_FILE=data/ledger-replay.jsonl tsx src/agent/run.ts"
+    "replay": "REPLAY_FILE=data/replay-worldcup.jsonl.gz REPLAY_SPEED=120 LEDGER_FILE=data/ledger-replay.jsonl tsx src/agent/run.ts"
   },
   "dependencies": {
     "@coral-xyz/anchor": "0.32.1",
