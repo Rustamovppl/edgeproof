@@ -33,7 +33,7 @@ export class ChainValidator {
 
   constructor() {
     this.connection = new Connection(config.rpcUrl, "confirmed");
-    const secret = JSON.parse(fs.readFileSync(config.walletPath, "utf8"));
+    const secret = JSON.parse(config.walletJson || fs.readFileSync(config.walletPath, "utf8"));
     this.wallet = Keypair.fromSecretKey(Uint8Array.from(secret));
 
     const provider = new anchor.AnchorProvider(

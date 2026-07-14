@@ -18,5 +18,12 @@ export const config = {
   initialJwt: process.env.TXLINE_JWT ?? "",
   rpcUrl: process.env.SOLANA_DEVNET_RPC ?? "https://api.devnet.solana.com",
   programId: process.env.TXORACLE_PROGRAM_ID ?? "6pW64gN1s2uqjHkn1unFeEjAwJkPGHoppGvS715wyP2J",
-  walletPath: required("BURNER_WALLET"),
+  // Either a path to a keypair file or the JSON key array itself (for
+  // platforms like Render where secrets are env vars, not files).
+  walletPath: process.env.BURNER_WALLET ?? "",
+  walletJson: process.env.BURNER_WALLET_JSON ?? "",
 };
+
+if (!config.walletPath && !config.walletJson) {
+  throw new Error("Set BURNER_WALLET (keypair file path) or BURNER_WALLET_JSON (key array)");
+}

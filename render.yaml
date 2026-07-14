@@ -1,0 +1,21 @@
+# Render blueprint — free-tier deployment in replay mode.
+# Judges see a recorded live World Cup match run through the real pipeline;
+# every Merkle proof still verifies against the permanent on-chain roots.
+services:
+  - type: web
+    name: edgeproof
+    runtime: node
+    plan: free
+    buildCommand: npm ci
+    startCommand: npx tsx src/agent/run.ts
+    envVars:
+      - key: REPLAY_FILE
+        value: data/replay-norway-england.jsonl.gz
+      - key: REPLAY_SPEED
+        value: "120"
+      - key: LEDGER_FILE
+        value: /tmp/ledger-replay.jsonl
+      - key: TXLINE_API_TOKEN
+        sync: false # set in the Render dashboard
+      - key: BURNER_WALLET_JSON
+        sync: false # devnet burner keypair JSON array — set in the Render dashboard

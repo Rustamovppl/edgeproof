@@ -1,5 +1,6 @@
 import * as fs from "fs";
 import * as readline from "readline";
+import * as zlib from "zlib";
 import { Tick } from "./types";
 
 /**
@@ -33,7 +34,9 @@ export class ReplayStream {
   }
 
   private async playOnce(): Promise<void> {
-    const rl = readline.createInterface({ input: fs.createReadStream(this.file) });
+    const raw = fs.createReadStream(this.file);
+    const input = this.file.endsWith(".gz") ? raw.pipe(zlib.createGunzip()) : raw;
+    const rl = readline.createInterface({ input });
     let prevTs: number | null = null;
     for await (const line of rl) {
       if (this.stopped) break;
