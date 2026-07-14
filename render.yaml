@@ -9,10 +9,12 @@ services:
     buildCommand: npm ci
     startCommand: npx tsx src/agent/run.ts
     envVars:
-      - key: REPLAY_FILE
-        value: data/replay-worldcup.jsonl.gz
-      - key: REPLAY_SPEED
-        value: "120"
+      # Live mode while World Cup matches are still on. To switch the judges'
+      # replay demo back on, restore:
+      #   - key: REPLAY_FILE
+      #     value: data/replay-worldcup.jsonl.gz
+      #   - key: REPLAY_SPEED
+      #     value: "120"
       - key: LEDGER_FILE
         value: /tmp/ledger-replay.jsonl
       - key: TXLINE_API_TOKEN
