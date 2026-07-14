@@ -1,4 +1,5 @@
 import express from "express";
+import * as fs from "fs";
 import * as http from "http";
 import * as path from "path";
 import { txline } from "../txline/client";
@@ -37,6 +38,18 @@ async function refreshFixtures() {
     for (const f of list) fixtures.set(f.FixtureId, f);
   } catch (e: any) {
     broadcast({ type: "status", msg: `fixtures refresh failed: ${e.message}` });
+  }
+  if (REPLAY_FILE) {
+    // Replayed matches have left the live fixtures snapshot — load their
+    // metadata from the recorded copy so the dashboard can name them.
+    try {
+      const recorded = JSON.parse(
+        fs.readFileSync(path.join(__dirname, "..", "..", "data", "recorded-fixtures.json"), "utf8")
+      ) as Fixture[];
+      for (const f of recorded) if (!fixtures.has(f.FixtureId)) fixtures.set(f.FixtureId, f);
+    } catch {
+      // recorded metadata is optional
+    }
   }
 }
 
@@ -153,6 +166,8 @@ app.get("/api/state", (_req, res) => {
           }
         : { fixture: f, latest1x2: null };
     })
+    // in replay mode, show only the matches actually being replayed
+    .filter((x) => !REPLAY_FILE || x.latest1x2)
     .sort((a, b) => a.fixture.StartTime - b.fixture.StartTime);
 
   res.json({
