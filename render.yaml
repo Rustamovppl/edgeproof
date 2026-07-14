@@ -15,8 +15,10 @@ services:
       #     value: data/replay-worldcup.jsonl.gz
       #   - key: REPLAY_SPEED
       #     value: "120"
-      - key: LEDGER_FILE
-        value: /tmp/ledger-replay.jsonl
+      # LEDGER_FILE unset in live mode: the service journals onto the shipped
+      # data/ledger.jsonl, so recorded live history (and its P&L) is visible.
+      # When switching back to replay, set LEDGER_FILE=/tmp/ledger-replay.jsonl
+      # again so replay decisions don't mix into the recorded history.
       - key: TXLINE_API_TOKEN
         sync: false # set in the Render dashboard
       - key: BURNER_WALLET_JSON

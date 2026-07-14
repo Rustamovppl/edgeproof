@@ -195,6 +195,8 @@ app.get("/api/state", (_req, res) => {
     })
     // in replay mode, show only the matches actually being replayed
     .filter((x) => !REPLAY_FILE || x.latest1x2)
+    // the dashboard is a World Cup product: hide friendlies unless they have live prices
+    .filter((x) => x.fixture.Competition === "World Cup" || x.latest1x2)
     .sort((a, b) => a.fixture.StartTime - b.fixture.StartTime);
 
   res.json({
