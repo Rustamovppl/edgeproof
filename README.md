@@ -6,6 +6,8 @@ EdgeProof trades live World Cup odds from the [TxLINE oracle](https://txline.txo
 
 Built for the TxODDS × Solana World Cup Hackathon (Trading Tools & Agents track).
 
+**Live demo:** https://edgeproof-ybjt.onrender.com — replaying a recorded live World Cup match (Norway–England) through the real pipeline; every proof verifies against the permanent on-chain roots. Free-tier instance: give it up to a minute to spin up.
+
 ## Why
 
 AI trading agents have a trust problem: a bot's backtest or P&L screenshot proves nothing. Its author can fabricate the prices it "traded" on.
