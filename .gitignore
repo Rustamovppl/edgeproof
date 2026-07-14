@@ -1,0 +1,8 @@
+node_modules/
+dist/
+agent.log
+.env
+*.key
+burner-*.json
+# raw tick capture is tens of MB per match day — ledger + audit reports stay in the repo
+data/ticks-*.jsonl

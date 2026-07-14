@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>EdgeProof — provably-honest trading agent</title>
+<style>
+  :root {
+    --plane: #f9f9f7;
+    --surface: #fcfcfb;
+    --surface-2: #f3f2ee;
+    --ink: #0b0b0b;
+    --ink-2: #52514e;
+    --muted: #898781;
+    --hairline: rgba(11, 11, 11, 0.10);
+    --grid: #e1e0d9;
+    --blue: #2a78d6;
+    --blue-soft: #cde2fb;
+    --good: #006300;
+    --good-chip-bg: rgba(12, 163, 12, 0.10);
+    --good-chip: #0a7a0a;
+    --warn-chip-bg: rgba(250, 178, 25, 0.14);
+    --warn-chip: #8a6002;
+    --crit: #d03b3b;
+    --crit-chip-bg: rgba(208, 59, 59, 0.10);
+    --shadow: 0 1px 2px rgba(11, 11, 11, 0.05), 0 4px 16px rgba(11, 11, 11, 0.04);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --plane: #0d0d0d;
+      --surface: #1a1a19;
+      --surface-2: #232322;
+      --ink: #ffffff;
+      --ink-2: #c3c2b7;
+      --muted: #898781;
+      --hairline: rgba(255, 255, 255, 0.10);
+      --grid: #2c2c2a;
+      --blue: #3987e5;
+      --blue-soft: #1c5cab;
+      --good: #0ca30c;
+      --good-chip-bg: rgba(12, 163, 12, 0.16);
+      --good-chip: #35c435;
+      --warn-chip-bg: rgba(250, 178, 25, 0.14);
+      --warn-chip: #fab219;
+      --crit: #e66767;
+      --crit-chip-bg: rgba(230, 103, 103, 0.14);
+      --shadow: none;
+    }
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--plane);
+    color: var(--ink);
+    font: 14px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif;
+    padding: 28px clamp(16px, 4vw, 48px) 48px;
+    max-width: 1240px;
+    margin: 0 auto;
+  }
+
+  header { margin-bottom: 22px; }
+  .brand { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+  .brand h1 { font-size: 22px; font-weight: 650; letter-spacing: -0.2px; }
+  .brand h1 span { color: var(--blue); }
+  .tagline { color: var(--ink-2); font-size: 14px; }
+  .how { margin-top: 10px; max-width: 720px; }
+  .how summary { cursor: pointer; color: var(--muted); font-size: 13px; user-select: none; }
+  .how summary:hover { color: var(--ink-2); }
+  .how p { color: var(--ink-2); font-size: 13px; margin: 8px 0 0; padding: 12px 14px; background: var(--surface); border: 1px solid var(--hairline); border-radius: 12px; }
+
+  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 26px; }
+  .stat { background: var(--surface); border: 1px solid var(--hairline); border-radius: 14px; padding: 14px 18px; box-shadow: var(--shadow); }
+  .stat .v { font-size: 24px; font-weight: 650; letter-spacing: -0.3px; }
+  .stat .l { color: var(--muted); font-size: 12px; margin-top: 2px; }
+  .v.up { color: var(--good); }
+  .v.down { color: var(--crit); }
+
+  .section { margin: 26px 0 10px; font-size: 13px; font-weight: 600; color: var(--ink-2); }
+  .section small { font-weight: 400; color: var(--muted); margin-left: 8px; }
+
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 12px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 16px;
+    padding: 16px 18px; box-shadow: var(--shadow);
+  }
+  .card h3 { font-size: 15px; font-weight: 650; }
+  .card .meta { color: var(--muted); font-size: 12px; margin: 2px 0 12px; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 5px; padding: 2px 10px; border-radius: 999px;
+    font-size: 11.5px; font-weight: 600;
+  }
+  .pill.live { background: var(--good-chip-bg); color: var(--good-chip); }
+  .pill.live::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: pulse 1.6s infinite; }
+  @keyframes pulse { 50% { opacity: .35; } }
+  .pill.soon { background: var(--surface-2); color: var(--ink-2); }
+
+  .bar { margin: 9px 0; }
+  .bar .row { display: flex; justify-content: space-between; font-size: 12.5px; margin-bottom: 3px; }
+  .bar .row .name { color: var(--ink-2); }
+  .bar .row .val { font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 600; }
+  .bar .row .val small { color: var(--muted); font-weight: 400; }
+  .bar .track { background: var(--surface-2); border-radius: 5px; height: 10px; overflow: hidden; }
+  .bar .fill { background: var(--blue); height: 100%; border-radius: 5px 4px 4px 5px; transition: width .6s cubic-bezier(.4,0,.2,1); }
+  .quiet { color: var(--muted); font-size: 13px; }
+
+  .tablewrap { background: var(--surface); border: 1px solid var(--hairline); border-radius: 16px; box-shadow: var(--shadow); overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  th, td { padding: 10px 14px; text-align: left; font-size: 13px; white-space: nowrap; }
+  th { color: var(--muted); font-size: 11.5px; font-weight: 600; border-bottom: 1px solid var(--grid); }
+  td { border-bottom: 1px solid var(--grid); font-variant-numeric: tabular-nums; }
+  tr:last-child td { border-bottom: none; }
+  td .why { color: var(--muted); font-size: 12px; white-space: normal; max-width: 260px; display: block; }
+  .empty { padding: 26px 20px; color: var(--muted); font-size: 13.5px; text-align: center; }
+  .chip { display: inline-flex; align-items: center; gap: 5px; padding: 2px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 600; }
+  .chip.ok { background: var(--good-chip-bg); color: var(--good-chip); }
+  .chip.wait { background: var(--warn-chip-bg); color: var(--warn-chip); }
+  .chip.bad { background: var(--crit-chip-bg); color: var(--crit); }
+  .chip a, a.chip { text-decoration: none; color: inherit; }
+  .pnl.up { color: var(--good); font-weight: 650; }
+  .pnl.down { color: var(--crit); font-weight: 650; }
+
+  #feed {
+    margin-top: 12px; background: var(--surface); border: 1px solid var(--hairline);
+    border-radius: 16px; padding: 6px 0; max-height: 240px; overflow-y: auto; box-shadow: var(--shadow);
+  }
+  #feed .item { display: flex; gap: 12px; padding: 6px 18px; font-size: 12.5px; color: var(--ink-2); }
+  #feed .item + .item { border-top: 1px solid var(--grid); }
+  #feed time { color: var(--muted); font-variant-numeric: tabular-nums; flex-shrink: 0; }
+  #feed .item.proof { color: var(--good-chip); }
+  #feed .item.trade { color: var(--ink); font-weight: 550; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <h1><span>▲</span> EdgeProof</h1>
+    <div class="tagline">a trading agent that can prove every price it acted on</div>
+    <span class="pill live" id="replay-pill" style="display:none" title="Replaying a recorded live World Cup match through the real pipeline — every proof still verifies against the permanent on-chain roots">▶ REPLAY of a recorded live match</span>
+  </div>
+  <details class="how">
+    <summary>How it works</summary>
+    <p>
+      The agent listens to TxODDS' live de-margined World Cup prices. When it spots a
+      real market move it opens a small paper position — and then proves, on the Solana
+      blockchain, that the exact price tick it acted on was genuinely published by the
+      oracle: each tick is checked against a Merkle root committed on-chain every five
+      minutes. Green "proved on-chain" badges link straight to the Solana explorer, so
+      you don't have to trust the agent — you can verify it.
+    </p>
+  </details>
+</header>
+
+<div class="stats">
+  <div class="stat"><div class="v" id="s-ticks">—</div><div class="l">price ticks received</div></div>
+  <div class="stat"><div class="v" id="s-positions">—</div><div class="l">agent decisions</div></div>
+  <div class="stat"><div class="v" id="s-pnl">—</div><div class="l">paper P&L, units</div></div>
+  <div class="stat"><div class="v" id="s-verified">—</div><div class="l">proved on-chain</div></div>
+  <div class="stat"><div class="v" id="s-pending">—</div><div class="l">proofs in flight</div></div>
+</div>
+
+<div class="section">Matches <small>fair win probabilities, margin removed</small></div>
+<div class="grid" id="fixtures"><div class="quiet">Connecting…</div></div>
+
+<div class="section">Agent decisions <small>every entry & exit anchored to a proven price tick</small></div>
+<div class="tablewrap">
+  <table>
+    <thead><tr>
+      <th>Opened</th><th>Match</th><th>Backed</th><th>Entry</th><th>Exit</th>
+      <th>P&L</th><th>Why</th><th>Entry tick</th><th>Exit tick</th>
+    </tr></thead>
+    <tbody id="positions"></tbody>
+  </table>
+  <div class="empty" id="pos-empty">
+    The agent is watching the market. It only acts on a genuine steam move —
+    when a team's fair probability jumps by 2.5+ points within ten minutes.
+    Decisions will appear here with their on-chain proofs.
+  </div>
+</div>
+
+<div class="section">Activity</div>
+<div id="feed"></div>
+
+<script>
+const $ = (id) => document.getElementById(id);
+const fmtTime = (ts) => new Date(ts).toISOString().slice(11, 19) + "Z";
+const num = (v, d = 1) => (Number.isFinite(v) ? v.toFixed(d) : "?");
+const explorer = (acc) => `https://explorer.solana.com/address/${acc}?cluster=devnet`;
+
+function startLabel(f, l) {
+  const started = Date.now() > f.StartTime;
+  // no fresh ticks for 90+ min after kick-off => the match is over
+  if (started && l && Date.now() - l.ts > 90 * 60 * 1000) return `<span class="pill soon">ended</span>`;
+  if (started && l && l.inRunning) return `<span class="pill live">LIVE</span>`;
+  const mins = Math.round((f.StartTime - Date.now()) / 60000);
+  if (mins > 0 && mins < 240) {
+    const h = Math.floor(mins / 60), m = mins % 60;
+    return `<span class="pill soon">starts in ${h ? h + "h " : ""}${m}m</span>`;
+  }
+  const d = new Date(f.StartTime);
+  return `<span class="pill soon">${d.toUTCString().slice(0, 22)} UTC</span>`;
+}
+
+function proofChip(ref) {
+  if (!ref) return '<span class="quiet">—</span>';
+  if (ref.verification === "verified")
+    return `<a class="chip ok" href="${explorer(ref.rootsAccount)}" target="_blank" title="Merkle proof verified against this on-chain account">✓ proved on-chain</a>`;
+  if (ref.verification === "failed")
+    return `<span class="chip bad" title="${ref.error ?? ""}">✕ not proved</span>`;
+  return `<span class="chip wait" title="Waiting for this 5-minute interval's Merkle root to be published">⏳ proving…</span>`;
+}
+
+function render(state) {
+  $("replay-pill").style.display = state.replay ? "" : "none";
+  $("s-ticks").textContent = state.totalTicks.toLocaleString();
+  $("s-positions").textContent = state.positions.length;
+  const pnl = state.realizedPnl;
+  $("s-pnl").textContent = (pnl > 0 ? "+" : "") + pnl;
+  $("s-pnl").className = "v " + (pnl > 0 ? "up" : pnl < 0 ? "down" : "");
+  let verified = 0;
+  for (const p of state.positions) {
+    if (p.entry?.verification === "verified") verified++;
+    if (p.exit?.verification === "verified") verified++;
+  }
+  $("s-verified").textContent = verified;
+  $("s-pending").textContent = state.pendingVerifications;
+
+  $("fixtures").innerHTML = state.fixtures.map(({ fixture: f, latest1x2: l }) => {
+    const bars = l ? l.names.map((n, i) => `
+      <div class="bar">
+        <div class="row">
+          <span class="name">${n}</span>
+          <span class="val">${l.pct[i].toFixed(1)}% <small>· ${l.odds[i].toFixed(2)}</small></span>
+        </div>
+        <div class="track"><div class="fill" style="width:${l.pct[i]}%"></div></div>
+      </div>`).join("")
+      : '<div class="quiet">No prices yet — the oracle starts publishing closer to kick-off.</div>';
+    return `<div class="card">
+      <h3>${f.Participant1} — ${f.Participant2}</h3>
+      <div class="meta">${f.Competition} &nbsp;${startLabel(f, l)}${l && l.period === "extra time" ? ' &nbsp;<span class="pill soon">extra time</span>' : ""}${l ? ` &nbsp;·&nbsp; updated ${fmtTime(l.ts)}` : ""}</div>
+      ${bars}</div>`;
+  }).join("");
+
+  const rows = state.positions;
+  $("pos-empty").style.display = rows.length ? "none" : "";
+  $("positions").innerHTML = rows.map((p) => {
+    const pnlCell = p.pnl === undefined ? '<span class="quiet">open</span>'
+      : `<span class="pnl ${p.pnl >= 0 ? "up" : "down"}">${p.pnl > 0 ? "↑ +" : p.pnl < 0 ? "↓ " : ""}${p.pnl}</span>`;
+    return `<tr>
+      <td>${fmtTime(p.openedAt)}</td>
+      <td>${p.fixtureName}</td>
+      <td><b>${p.outcomeName}</b> · ${p.stake}u</td>
+      <td>${num(p.entry.pct)}% @ ${num(p.entry.odds, 2)}</td>
+      <td>${p.exit ? num(p.exit.pct) + "%" : '<span class="chip wait">open</span>'}</td>
+      <td>${pnlCell}</td>
+      <td><span class="why">${p.reason}${p.closeReason ? " → " + p.closeReason : ""}</span></td>
+      <td>${proofChip(p.entry)}</td>
+      <td>${proofChip(p.exit)}</td>
+    </tr>`;
+  }).join("");
+}
+
+function feed(msg, cls) {
+  const el = document.createElement("div");
+  el.className = "item" + (cls ? " " + cls : "");
+  el.innerHTML = `<time>${fmtTime(Date.now())}</time><span></span>`;
+  el.lastChild.textContent = msg;
+  $("feed").prepend(el);
+  while ($("feed").children.length > 150) $("feed").lastChild.remove();
+}
+
+async function refresh() {
+  try {
+    const state = await fetch("/api/state").then((r) => r.json());
+    render(state);
+  } catch { /* agent restarting */ }
+}
+
+const es = new EventSource("/events");
+es.onmessage = (e) => {
+  const ev = JSON.parse(e.data);
+  if (ev.type === "status") {
+    if (ev.msg.startsWith("PROOF OK")) feed("On-chain proof confirmed — " + ev.msg.slice(9), "proof");
+    else if (!ev.msg.startsWith("verification")) feed(ev.msg);
+    else feed(ev.msg);
+  } else if (ev.type === "decision") {
+    feed(`Opened: ${ev.position.outcomeName} in ${ev.position.fixtureName} — ${ev.position.reason}`, "trade");
+    refresh();
+  } else if (ev.type === "close") {
+    feed(`Closed: ${ev.position.outcomeName} (${ev.position.closeReason}) — P&L ${ev.position.pnl > 0 ? "+" : ""}${ev.position.pnl}`, "trade");
+    refresh();
+  } else if (ev.type === "verification") refresh();
+};
+
+feed("Dashboard connected");
+refresh();
+setInterval(refresh, 5000);
+</script>
+</body>
+</html>

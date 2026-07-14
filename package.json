@@ -1,0 +1,27 @@
+{
+  "name": "edgeproof",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Provably-honest World Cup trading agent on TxLINE + Solana devnet",
+  "type": "commonjs",
+  "scripts": {
+    "probe": "tsx src/probe.ts",
+    "agent": "tsx src/agent/run.ts",
+    "audit": "tsx src/audit.ts",
+    "replay": "REPLAY_FILE=data/ticks-2026-07-11.jsonl REPLAY_SPEED=60 LEDGER_FILE=data/ledger-replay.jsonl tsx src/agent/run.ts"
+  },
+  "dependencies": {
+    "@coral-xyz/anchor": "0.32.1",
+    "@solana/web3.js": "^1.98.4",
+    "@types/express": "^5.0.6",
+    "axios": "^1.18.1",
+    "dotenv": "^16.4.7",
+    "eventsource": "^4.0.0",
+    "express": "^5.2.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.4",
+    "tsx": "^4.19.0",
+    "typescript": "^5.6.0"
+  }
+}
