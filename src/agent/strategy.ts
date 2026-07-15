@@ -49,6 +49,16 @@ export class SteamStrategy {
   onTick(tick: Tick, openPositions: Position[]): Signal[] {
     const market = TickStore.marketKey(tick);
     if (!TRADEABLE_1X2.has(market)) return [];
+
+    // The oracle pre-prices extra-time markets from ~minute 85 of regulation.
+    // Those are conditional quotes: if regulation ends decisively the market
+    // simply dies and the position would be void. Only trade the ET market
+    // once extra time is real — i.e. the regulation 1X2 has stopped updating.
+    if (market === ET_1X2) {
+      const ft = this.store.latest(tick.FixtureId, FT_1X2);
+      if (ft && tick.Ts - ft.Ts < 2 * 60 * 1000) return [];
+    }
+
     const hist = this.store.marketHistory(tick.FixtureId, market);
     if (hist.length < 2) return [];
 
