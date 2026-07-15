@@ -4,138 +4,222 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>EdgeProof — provably-honest trading agent</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Cpath d='M16 4 28 26H4Z' fill='%233987e5'/%3E%3C/svg%3E">
 <style>
   :root {
     --plane: #f9f9f7;
     --surface: #fcfcfb;
-    --surface-2: #f3f2ee;
+    --surface-2: #f0efec;
     --ink: #0b0b0b;
     --ink-2: #52514e;
     --muted: #898781;
-    --hairline: rgba(11, 11, 11, 0.10);
-    --grid: #e1e0d9;
-    --blue: #2a78d6;
-    --blue-soft: #cde2fb;
-    --good: #006300;
-    --good-chip-bg: rgba(12, 163, 12, 0.10);
-    --good-chip: #0a7a0a;
-    --warn-chip-bg: rgba(250, 178, 25, 0.14);
+    --faint: #b5b3ac;
+    --hairline: rgba(11, 11, 11, 0.08);
+    --hairline-strong: rgba(11, 11, 11, 0.14);
+    --grid: #e7e6e0;
+    --accent: #2a78d6;
+    --accent-dim: rgba(42, 120, 214, 0.12);
+    --up: #006300;
+    --up-chip-bg: rgba(12, 163, 12, 0.10);
+    --up-chip: #0a7a0a;
+    --warn-chip-bg: rgba(250, 178, 25, 0.15);
     --warn-chip: #8a6002;
-    --crit: #d03b3b;
-    --crit-chip-bg: rgba(208, 59, 59, 0.10);
-    --shadow: 0 1px 2px rgba(11, 11, 11, 0.05), 0 4px 16px rgba(11, 11, 11, 0.04);
+    --down: #c53030;
+    --down-chip-bg: rgba(208, 59, 59, 0.10);
+    --glow: transparent;
+    --shadow: 0 1px 2px rgba(11,11,11,.04), 0 8px 24px -12px rgba(11,11,11,.10);
+    --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, system-ui, sans-serif;
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --plane: #0d0d0d;
-      --surface: #1a1a19;
-      --surface-2: #232322;
-      --ink: #ffffff;
-      --ink-2: #c3c2b7;
-      --muted: #898781;
-      --hairline: rgba(255, 255, 255, 0.10);
-      --grid: #2c2c2a;
-      --blue: #3987e5;
-      --blue-soft: #1c5cab;
-      --good: #0ca30c;
-      --good-chip-bg: rgba(12, 163, 12, 0.16);
-      --good-chip: #35c435;
-      --warn-chip-bg: rgba(250, 178, 25, 0.14);
+      --plane: #0a0b0e;
+      --surface: #101217;
+      --surface-2: #191c23;
+      --ink: #f2f3f5;
+      --ink-2: #b8bcc6;
+      --muted: #7c8290;
+      --faint: #4d525e;
+      --hairline: rgba(255, 255, 255, 0.07);
+      --hairline-strong: rgba(255, 255, 255, 0.13);
+      --grid: rgba(255, 255, 255, 0.06);
+      --accent: #3987e5;
+      --accent-dim: rgba(57, 135, 229, 0.15);
+      --up: #35c435;
+      --up-chip-bg: rgba(53, 196, 53, 0.12);
+      --up-chip: #4fd24f;
+      --warn-chip-bg: rgba(250, 178, 25, 0.12);
       --warn-chip: #fab219;
-      --crit: #e66767;
-      --crit-chip-bg: rgba(230, 103, 103, 0.14);
+      --down: #e66767;
+      --down-chip-bg: rgba(230, 103, 103, 0.12);
+      --glow: radial-gradient(60% 40% at 50% -10%, rgba(57,135,229,.10), transparent 70%);
       --shadow: none;
     }
   }
   * { box-sizing: border-box; margin: 0; }
+  html { scrollbar-gutter: stable; }
   body {
     background: var(--plane);
+    background-image: var(--glow);
+    background-repeat: no-repeat;
     color: var(--ink);
-    font: 14px/1.55 system-ui, -apple-system, "Segoe UI", sans-serif;
-    padding: 28px clamp(16px, 4vw, 48px) 48px;
-    max-width: 1240px;
+    font: 14px/1.5 var(--sans);
+    -webkit-font-smoothing: antialiased;
+    padding: 0 clamp(16px, 4vw, 44px) 56px;
+    max-width: 1280px;
     margin: 0 auto;
   }
+  ::selection { background: var(--accent-dim); }
 
-  header { margin-bottom: 22px; }
-  .brand { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-  .brand h1 { font-size: 22px; font-weight: 650; letter-spacing: -0.2px; }
-  .brand h1 span { color: var(--blue); }
-  .tagline { color: var(--ink-2); font-size: 14px; }
-  .how { margin-top: 10px; max-width: 720px; }
-  .how summary { cursor: pointer; color: var(--muted); font-size: 13px; user-select: none; }
-  .how summary:hover { color: var(--ink-2); }
-  .how p { color: var(--ink-2); font-size: 13px; margin: 8px 0 0; padding: 12px 14px; background: var(--surface); border: 1px solid var(--hairline); border-radius: 12px; }
-
-  .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 26px; }
-  .stat { background: var(--surface); border: 1px solid var(--hairline); border-radius: 14px; padding: 14px 18px; box-shadow: var(--shadow); }
-  .stat .v { font-size: 24px; font-weight: 650; letter-spacing: -0.3px; }
-  .stat .l { color: var(--muted); font-size: 12px; margin-top: 2px; }
-  .v.up { color: var(--good); }
-  .v.down { color: var(--crit); }
-
-  .section { margin: 26px 0 10px; font-size: 13px; font-weight: 600; color: var(--ink-2); }
-  .section small { font-weight: 400; color: var(--muted); margin-left: 8px; }
-
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 12px; }
-  .card {
-    background: var(--surface); border: 1px solid var(--hairline); border-radius: 16px;
-    padding: 16px 18px; box-shadow: var(--shadow);
+  /* ---------- header ---------- */
+  header {
+    display: flex; align-items: center; gap: 14px; flex-wrap: wrap;
+    padding: 22px 0 18px;
+    border-bottom: 1px solid var(--hairline);
+    margin-bottom: 24px;
   }
-  .card h3 { font-size: 15px; font-weight: 650; }
-  .card .meta { color: var(--muted); font-size: 12px; margin: 2px 0 12px; }
+  .mark { width: 26px; height: 26px; flex-shrink: 0; }
+  .wordmark { font-size: 17px; font-weight: 650; letter-spacing: -0.02em; }
+  .wordmark small { color: var(--muted); font-weight: 450; font-size: 13px; margin-left: 10px; letter-spacing: 0; }
+  .chips { margin-left: auto; display: flex; gap: 8px; align-items: center; }
+  .chip-net {
+    font: 500 11px/1 var(--mono); color: var(--muted);
+    border: 1px solid var(--hairline-strong); border-radius: 6px; padding: 5px 8px;
+    letter-spacing: .02em;
+  }
   .pill {
-    display: inline-flex; align-items: center; gap: 5px; padding: 2px 10px; border-radius: 999px;
-    font-size: 11.5px; font-weight: 600;
+    display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 999px;
+    font-size: 11px; font-weight: 600; letter-spacing: .01em;
   }
-  .pill.live { background: var(--good-chip-bg); color: var(--good-chip); }
-  .pill.live::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: pulse 1.6s infinite; }
-  @keyframes pulse { 50% { opacity: .35; } }
+  .pill.live { background: var(--up-chip-bg); color: var(--up-chip); }
+  .pill.live::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: pulse 1.8s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: .3; } }
   .pill.soon { background: var(--surface-2); color: var(--ink-2); }
+  .how { width: 100%; }
+  .how summary { cursor: pointer; color: var(--muted); font-size: 12.5px; user-select: none; width: fit-content; }
+  .how summary:hover { color: var(--ink-2); }
+  .how p { color: var(--ink-2); font-size: 13px; line-height: 1.65; margin-top: 10px; padding: 14px 16px; background: var(--surface); border: 1px solid var(--hairline); border-radius: 12px; max-width: 760px; }
 
-  .bar { margin: 9px 0; }
-  .bar .row { display: flex; justify-content: space-between; font-size: 12.5px; margin-bottom: 3px; }
-  .bar .row .name { color: var(--ink-2); }
-  .bar .row .val { font-variant-numeric: tabular-nums; color: var(--ink); font-weight: 600; }
-  .bar .row .val small { color: var(--muted); font-weight: 400; }
-  .bar .track { background: var(--surface-2); border-radius: 5px; height: 10px; overflow: hidden; }
-  .bar .fill { background: var(--blue); height: 100%; border-radius: 5px 4px 4px 5px; transition: width .6s cubic-bezier(.4,0,.2,1); }
+  /* ---------- stat strip ---------- */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    background: var(--surface);
+    border: 1px solid var(--hairline);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    margin-bottom: 30px;
+  }
+  .stat { padding: 16px 20px 14px; position: relative; }
+  .stat + .stat::before {
+    content: ""; position: absolute; left: 0; top: 18%; bottom: 18%;
+    width: 1px; background: var(--hairline);
+  }
+  .stat .v {
+    font: 600 24px/1.2 var(--mono);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -0.02em;
+  }
+  .stat .l {
+    color: var(--muted); font-size: 10.5px; font-weight: 550;
+    text-transform: uppercase; letter-spacing: .09em; margin-top: 5px; line-height: 1.5;
+  }
+  .v.up { color: var(--up); }
+  .v.down { color: var(--down); }
+
+  /* ---------- sections ---------- */
+  .section {
+    display: flex; align-items: baseline; gap: 10px;
+    margin: 30px 0 12px;
+  }
+  .section h2 { font-size: 13px; font-weight: 650; letter-spacing: -0.01em; }
+  .section span { color: var(--muted); font-size: 12px; }
+
+  /* ---------- match cards ---------- */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 14px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 14px;
+    padding: 18px 20px 16px; box-shadow: var(--shadow);
+  }
+  .card h3 { font-size: 14.5px; font-weight: 650; letter-spacing: -0.01em; }
+  .card .meta { color: var(--muted); font-size: 11.5px; margin: 4px 0 14px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .bar { margin: 10px 0; }
+  .bar .row { display: flex; justify-content: space-between; align-items: baseline; font-size: 12.5px; margin-bottom: 5px; }
+  .bar .row .name { color: var(--ink-2); font-weight: 500; }
+  .bar .row .val { font: 600 12.5px var(--mono); font-variant-numeric: tabular-nums; }
+  .bar .row .val small { color: var(--muted); font-weight: 400; margin-left: 4px; }
+  .bar .track { background: var(--surface-2); border-radius: 3px; height: 6px; overflow: hidden; }
+  .bar .fill { background: var(--accent); height: 100%; border-radius: 3px; transition: width .7s cubic-bezier(.4,0,.2,1); }
   .quiet { color: var(--muted); font-size: 13px; }
 
-  .tablewrap { background: var(--surface); border: 1px solid var(--hairline); border-radius: 16px; box-shadow: var(--shadow); overflow-x: auto; }
-  table { width: 100%; border-collapse: collapse; }
-  th, td { padding: 10px 14px; text-align: left; font-size: 13px; white-space: nowrap; }
-  th { color: var(--muted); font-size: 11.5px; font-weight: 600; border-bottom: 1px solid var(--grid); }
-  td { border-bottom: 1px solid var(--grid); font-variant-numeric: tabular-nums; }
-  tr:last-child td { border-bottom: none; }
-  td .why { color: var(--muted); font-size: 12px; white-space: normal; max-width: 260px; display: block; }
-  .empty { padding: 26px 20px; color: var(--muted); font-size: 13.5px; text-align: center; }
-  .chip { display: inline-flex; align-items: center; gap: 5px; padding: 2px 10px; border-radius: 999px; font-size: 11.5px; font-weight: 600; }
-  .chip.ok { background: var(--good-chip-bg); color: var(--good-chip); }
-  .chip.wait { background: var(--warn-chip-bg); color: var(--warn-chip); }
-  .chip.bad { background: var(--crit-chip-bg); color: var(--crit); }
-  .chip a, a.chip { text-decoration: none; color: inherit; }
-  .pnl.up { color: var(--good); font-weight: 650; }
-  .pnl.down { color: var(--crit); font-weight: 650; }
-
-  #feed {
-    margin-top: 12px; background: var(--surface); border: 1px solid var(--hairline);
-    border-radius: 16px; padding: 6px 0; max-height: 240px; overflow-y: auto; box-shadow: var(--shadow);
+  /* ---------- decisions table ---------- */
+  .tablewrap {
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 14px;
+    box-shadow: var(--shadow); overflow-x: auto;
   }
-  #feed .item { display: flex; gap: 12px; padding: 6px 18px; font-size: 12.5px; color: var(--ink-2); }
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    padding: 12px 14px; text-align: left;
+    color: var(--muted); font-size: 10.5px; font-weight: 550;
+    text-transform: uppercase; letter-spacing: .08em;
+    border-bottom: 1px solid var(--hairline-strong);
+    white-space: nowrap;
+  }
+  td {
+    padding: 12px 14px; font-size: 13px; border-bottom: 1px solid var(--grid);
+    white-space: nowrap; vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tbody tr { transition: background .15s; }
+  tbody tr:hover { background: var(--accent-dim); }
+  td.num { font: 500 12.5px var(--mono); font-variant-numeric: tabular-nums; }
+  td .why { color: var(--muted); font-size: 12px; white-space: normal; min-width: 300px; max-width: 420px; display: block; line-height: 1.55; }
+  .empty { padding: 34px 24px; color: var(--muted); font-size: 13.5px; text-align: center; line-height: 1.7; }
+  .tag { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 6px; font-size: 11px; font-weight: 600; letter-spacing: .01em; }
+  .tag.ok { background: var(--up-chip-bg); color: var(--up-chip); }
+  .tag.wait { background: var(--warn-chip-bg); color: var(--warn-chip); }
+  .tag.bad { background: var(--down-chip-bg); color: var(--down); }
+  a.tag { text-decoration: none; }
+  a.tag:hover { filter: brightness(1.12); }
+  .pnl.up { color: var(--up); font-weight: 650; }
+  .pnl.down { color: var(--down); font-weight: 650; }
+
+  /* ---------- activity ---------- */
+  #feed {
+    background: var(--surface); border: 1px solid var(--hairline); border-radius: 14px;
+    box-shadow: var(--shadow);
+    max-height: 240px; overflow-y: auto; padding: 4px 0;
+  }
+  #feed::-webkit-scrollbar { width: 10px; }
+  #feed::-webkit-scrollbar-thumb { background: var(--hairline-strong); border-radius: 5px; border: 3px solid var(--surface); }
+  #feed .item {
+    display: flex; gap: 14px; padding: 7px 20px;
+    font: 12px/1.6 var(--mono); color: var(--ink-2);
+  }
   #feed .item + .item { border-top: 1px solid var(--grid); }
-  #feed time { color: var(--muted); font-variant-numeric: tabular-nums; flex-shrink: 0; }
-  #feed .item.proof { color: var(--good-chip); }
-  #feed .item.trade { color: var(--ink); font-weight: 550; }
+  #feed time { color: var(--faint); flex-shrink: 0; font-variant-numeric: tabular-nums; }
+  #feed .item.proof span { color: var(--up-chip); }
+  #feed .item.trade span { color: var(--ink); font-weight: 600; }
+
+  footer { color: var(--faint); font-size: 11.5px; margin-top: 34px; display: flex; gap: 6px; flex-wrap: wrap; }
+  footer a { color: var(--muted); }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="brand">
-    <h1><span>▲</span> EdgeProof</h1>
-    <div class="tagline">a trading agent that can prove every price it acted on</div>
-    <span class="pill live" id="replay-pill" style="display:none" title="Replaying a recorded live World Cup match through the real pipeline — every proof still verifies against the permanent on-chain roots">▶ REPLAY of a recorded live match</span>
+  <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+    <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#5aa2f0"/><stop offset="1" stop-color="#2a78d6"/>
+    </linearGradient></defs>
+    <path d="M16 3.5 29 27H3Z" fill="url(#g)"/>
+    <path d="M16 11 22.8 24H9.2Z" fill="var(--plane)"/>
+  </svg>
+  <div class="wordmark">EdgeProof<small>a trading agent that can prove every price it acted on</small></div>
+  <div class="chips">
+    <span class="pill live" id="replay-pill" style="display:none" title="Replaying a recorded live World Cup match through the real pipeline — every proof still verifies against the permanent on-chain roots">▶ replay of a recorded live match</span>
+    <span class="chip-net">solana devnet</span>
   </div>
   <details class="how">
     <summary>How it works</summary>
@@ -151,35 +235,40 @@
 </header>
 
 <div class="stats">
-  <div class="stat"><div class="v" id="s-ticks">—</div><div class="l" title="Counts ticks received by the current process; 51,000+ were captured across the recorded live matches">price ticks · this session</div></div>
+  <div class="stat"><div class="v" id="s-ticks">—</div><div class="l" title="Counts ticks received by the current process">price ticks · session</div></div>
   <div class="stat"><div class="v" id="s-positions">—</div><div class="l">agent decisions</div></div>
-  <div class="stat"><div class="v" id="s-pnl">—</div><div class="l" id="s-pnl-label">paper P&L, units</div></div>
+  <div class="stat"><div class="v" id="s-pnl">—</div><div class="l" id="s-pnl-label">paper p&l, units</div></div>
   <div class="stat"><div class="v" id="s-verified">—</div><div class="l">decision ticks proved on-chain</div></div>
   <div class="stat"><div class="v" id="s-pending">—</div><div class="l">proofs in flight</div></div>
   <div class="stat"><div class="v" id="s-integrity">—</div><div class="l" title="The agent continuously spot-checks random feed ticks (not just its own trades) against the on-chain Merkle roots">feed integrity checks</div></div>
 </div>
 
-<div class="section">Matches <small>fair win probabilities, margin removed</small></div>
+<div class="section"><h2>Matches</h2><span>fair win probabilities, margin removed</span></div>
 <div class="grid" id="fixtures"><div class="quiet">Connecting…</div></div>
 
-<div class="section">Agent decisions <small>every entry & exit anchored to a proven price tick</small></div>
+<div class="section"><h2>Agent decisions</h2><span>every entry &amp; exit anchored to a proven price tick</span></div>
 <div class="tablewrap">
   <table>
     <thead><tr>
       <th>Opened</th><th>Match</th><th>Backed</th><th>Entry</th><th>Exit</th>
-      <th>P&L</th><th>Why</th><th>Entry tick</th><th>Exit tick</th>
+      <th>P&amp;L</th><th>Why</th><th>Entry tick</th><th>Exit tick</th>
     </tr></thead>
     <tbody id="positions"></tbody>
   </table>
   <div class="empty" id="pos-empty">
     The agent is watching the market. It only acts on a genuine steam move —
-    when a team's fair probability jumps by 2.5+ points within ten minutes.
+    when a team's fair probability jumps by 2.5+ points within ten minutes.<br>
     Decisions will appear here with their on-chain proofs.
   </div>
 </div>
 
-<div class="section">Activity</div>
+<div class="section"><h2>Activity</h2></div>
 <div id="feed"></div>
+
+<footer>
+  <span>EdgeProof · TxODDS × Solana World Cup Hackathon ·</span>
+  <a href="https://github.com/Rustamovppl/edgeproof" target="_blank">source &amp; audit tooling on GitHub</a>
+</footer>
 
 <script>
 const $ = (id) => document.getElementById(id);
@@ -189,38 +278,34 @@ const explorer = (acc) => `https://explorer.solana.com/address/${acc}?cluster=de
 
 function startLabel(f, l) {
   const started = Date.now() > f.StartTime;
-  // no fresh ticks for 90+ min after kick-off => the match is over
   if (started && l && Date.now() - l.ts > 90 * 60 * 1000) return `<span class="pill soon">ended</span>`;
-  if (started && l && l.inRunning) return `<span class="pill live">LIVE</span>`;
+  if (started && l && l.inRunning) return `<span class="pill live">live</span>`;
   const mins = Math.round((f.StartTime - Date.now()) / 60000);
   if (mins > 0 && mins < 240) {
     const h = Math.floor(mins / 60), m = mins % 60;
     return `<span class="pill soon">starts in ${h ? h + "h " : ""}${m}m</span>`;
   }
-  const d = new Date(f.StartTime);
-  return `<span class="pill soon">${d.toUTCString().slice(0, 22)} UTC</span>`;
+  return `<span class="pill soon">${new Date(f.StartTime).toUTCString().slice(0, 22)} UTC</span>`;
 }
 
 function proofChip(ref) {
   if (!ref) return '<span class="quiet">—</span>';
   if (ref.verification === "verified")
-    return `<a class="chip ok" href="${explorer(ref.rootsAccount)}" target="_blank" title="Merkle proof verified against this on-chain account">✓ proved on-chain</a>`;
+    return `<a class="tag ok" href="${explorer(ref.rootsAccount)}" target="_blank" title="Merkle proof verified against this on-chain account">✓ proved on-chain</a>`;
   if (ref.verification === "failed")
-    return `<span class="chip bad" title="${ref.error ?? ""}">✕ not proved</span>`;
-  return `<span class="chip wait" title="Waiting for this 5-minute interval's Merkle root to be published">⏳ proving…</span>`;
+    return `<span class="tag bad" title="${ref.error ?? ""}">✕ not proved</span>`;
+  return `<span class="tag wait" title="Waiting for this 5-minute interval's Merkle root to be published">⧗ proving…</span>`;
 }
 
 function render(state) {
   $("replay-pill").style.display = state.replay ? "" : "none";
-  $("s-ticks").textContent = state.totalTicks.toLocaleString();
+  $("s-ticks").textContent = state.totalTicks.toLocaleString("en-US");
   $("s-positions").textContent = state.positions.length;
   const pnl = state.realizedPnl;
   $("s-pnl").textContent = (pnl > 0 ? "+" : "") + pnl;
   $("s-pnl").className = "v " + (pnl > 0 ? "up" : pnl < 0 ? "down" : "");
   if (state.pnlBefore !== undefined && state.pnlBefore !== 0) {
-    $("s-pnl-label").innerHTML =
-      `paper P&L, units<br>v1: ${state.pnlBefore} · <b>tuned: ${state.pnlTuned > 0 ? "+" : ""}${state.pnlTuned}</b>`;
-    $("s-pnl-label").title = "The untuned v1 chased goal shocks on night one (−110); every trade since the live re-tune is included in the tuned figure. All entries are on-chain provable.";
+    $("s-pnl-label").innerHTML = `paper p&l · v1: ${state.pnlBefore} · <b>tuned: ${state.pnlTuned > 0 ? "+" : ""}${state.pnlTuned}</b>`;
   }
   let verified = 0, totalRefs = 0;
   for (const p of state.positions) {
@@ -244,14 +329,14 @@ function render(state) {
       <div class="bar">
         <div class="row">
           <span class="name">${n}</span>
-          <span class="val">${l.pct[i].toFixed(1)}% <small>· ${l.odds[i].toFixed(2)}</small></span>
+          <span class="val">${num(l.pct[i])}%<small>· ${num(l.odds[i], 2)}</small></span>
         </div>
-        <div class="track"><div class="fill" style="width:${l.pct[i]}%"></div></div>
+        <div class="track"><div class="fill" style="width:${Math.min(100, l.pct[i])}%"></div></div>
       </div>`).join("")
       : '<div class="quiet">No prices yet — the oracle starts publishing closer to kick-off.</div>';
     return `<div class="card">
       <h3>${f.Participant1} — ${f.Participant2}</h3>
-      <div class="meta">${f.Competition} &nbsp;${startLabel(f, l)}${l && l.period === "extra time" ? ' &nbsp;<span class="pill soon">extra time</span>' : ""}${l ? ` &nbsp;·&nbsp; updated ${fmtTime(l.ts)}` : ""}</div>
+      <div class="meta"><span>${f.Competition}</span>${startLabel(f, l)}${l && l.period === "extra time" ? '<span class="pill soon">extra time</span>' : ""}${l ? `<span>updated ${fmtTime(l.ts)}</span>` : ""}</div>
       ${bars}</div>`;
   }).join("");
 
@@ -261,12 +346,12 @@ function render(state) {
     const pnlCell = p.pnl === undefined ? '<span class="quiet">open</span>'
       : `<span class="pnl ${p.pnl >= 0 ? "up" : "down"}">${p.pnl > 0 ? "↑ +" : p.pnl < 0 ? "↓ " : ""}${p.pnl}</span>`;
     return `<tr>
-      <td>${fmtTime(p.openedAt)}</td>
+      <td class="num">${fmtTime(p.openedAt)}</td>
       <td>${p.fixtureName}</td>
       <td><b>${p.outcomeName}</b> · ${p.stake}u</td>
-      <td>${num(p.entry.pct)}% @ ${num(p.entry.odds, 2)}</td>
-      <td>${p.exit ? num(p.exit.pct) + "%" : '<span class="chip wait">open</span>'}</td>
-      <td>${pnlCell}</td>
+      <td class="num">${num(p.entry.pct)}% @ ${num(p.entry.odds, 2)}</td>
+      <td class="num">${p.exit ? num(p.exit.pct) + "%" : '<span class="tag wait">open</span>'}</td>
+      <td class="num">${pnlCell}</td>
       <td><span class="why">${p.reason}${p.closeReason ? " → " + p.closeReason : ""}</span></td>
       <td>${proofChip(p.entry)}</td>
       <td>${proofChip(p.exit)}</td>
@@ -295,7 +380,7 @@ es.onmessage = (e) => {
   const ev = JSON.parse(e.data);
   if (ev.type === "status") {
     if (ev.msg.startsWith("PROOF OK")) feed("On-chain proof confirmed — " + ev.msg.slice(9), "proof");
-    else if (!ev.msg.startsWith("verification")) feed(ev.msg);
+    else if (ev.msg.startsWith("integrity check OK")) feed(ev.msg, "proof");
     else feed(ev.msg);
   } else if (ev.type === "decision") {
     feed(`Opened: ${ev.position.outcomeName} in ${ev.position.fixtureName} — ${ev.position.reason}`, "trade");
