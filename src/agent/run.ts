@@ -139,18 +139,27 @@ function sweepStalePositions() {
     if (now - pos.openedAt < SteamStrategy.MAX_HOLD_MS + 60_000) continue;
     const last = store.latest(pos.fixtureId, pos.market ?? FT_1X2);
     const idx = last ? last.PriceNames.indexOf(pos.outcome) : -1;
-    if (!last || idx < 0) continue;
-    pos.exit = tickRef(last, idx);
+    if (last && idx >= 0) {
+      pos.exit = tickRef(last, idx);
+      pos.closeReason = "sweep: no fresh ticks, closed at last known price";
+      pos.pnl = SteamStrategy.pnl(pos.stake, pos.entry.pct, pos.exit.pct);
+    } else {
+      // No price at all (e.g. a conditional extra-time market whose condition
+      // never happened, or restart after the market died): void the bet.
+      pos.closeReason = "market discontinued before settlement — voided at entry price";
+      pos.pnl = 0;
+    }
     pos.closedAt = now;
-    pos.closeReason = "sweep: no fresh ticks, closed at last known price";
-    pos.pnl = SteamStrategy.pnl(pos.stake, pos.entry.pct, pos.exit.pct);
     pos.status = "closed";
     ledger.upsert(pos);
     broadcast({ type: "close", position: pos });
-    verifier.enqueue(pos.exit, (ref) => {
-      ledger.upsert(pos);
-      broadcast({ type: "verification", positionId: pos.id, side: "exit", ref });
-    });
+    const exit = pos.exit;
+    if (exit) {
+      verifier.enqueue(exit, (ref) => {
+        ledger.upsert(pos);
+        broadcast({ type: "verification", positionId: pos.id, side: "exit", ref });
+      });
+    }
   }
 }
 
