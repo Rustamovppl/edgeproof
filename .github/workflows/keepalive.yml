@@ -1,0 +1,11 @@
+# Keeps the free Render instance warm so judges never hit a cold start.
+name: keepalive
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - run: curl -sS --max-time 60 https://edgeproof-ybjt.onrender.com/api/state > /dev/null || true

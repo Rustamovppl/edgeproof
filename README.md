@@ -75,6 +75,7 @@ The agent's own state is never trusted — only the append-only ledger, the orac
 - **The odds-roots PDA is not documented.** TxODDS publishes seeds for scores/fixtures roots but not odds. EdgeProof recovers the accounts empirically: it scans the program's accounts, matches the `DailyOddsMerkleRoots` layout (discriminator + `epochDay` as u16 at offset 8 + 288 interval roots), and builds a day→account map from chain data alone.
 - **Market lifecycle.** Knockout football switches markets mid-game: the 90-minute 1X2 settles at full time and extra-time markets take over. The agent trades both, and each position is bound to its own market — an extra-time position can only be closed by extra-time ticks.
 - **Suspension ticks.** Around kick-off and goals the oracle publishes empty-price ticks (market suspended). These are captured to disk but excluded from strategy history.
+- **Continuous feed-integrity sampling.** Beyond proving its own decisions, the agent spot-checks random ticks from the raw feed against the on-chain roots every few minutes ("feed integrity" tile on the dashboard) — oracle tampering would surface even on ticks it never traded.
 
 ### Strategy (deliberately simple & transparent)
 

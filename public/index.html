@@ -154,8 +154,9 @@
   <div class="stat"><div class="v" id="s-ticks">—</div><div class="l" title="Counts ticks received by the current process; 51,000+ were captured across the recorded live matches">price ticks · this session</div></div>
   <div class="stat"><div class="v" id="s-positions">—</div><div class="l">agent decisions</div></div>
   <div class="stat"><div class="v" id="s-pnl">—</div><div class="l" id="s-pnl-label">paper P&L, units</div></div>
-  <div class="stat"><div class="v" id="s-verified">—</div><div class="l">proved on-chain</div></div>
+  <div class="stat"><div class="v" id="s-verified">—</div><div class="l">decision ticks proved on-chain</div></div>
   <div class="stat"><div class="v" id="s-pending">—</div><div class="l">proofs in flight</div></div>
+  <div class="stat"><div class="v" id="s-integrity">—</div><div class="l" title="The agent continuously spot-checks random feed ticks (not just its own trades) against the on-chain Merkle roots">feed integrity checks</div></div>
 </div>
 
 <div class="section">Matches <small>fair win probabilities, margin removed</small></div>
@@ -221,13 +222,22 @@ function render(state) {
       `paper P&L, units<br>v1: ${state.pnlBefore} · <b>tuned: ${state.pnlTuned > 0 ? "+" : ""}${state.pnlTuned}</b>`;
     $("s-pnl-label").title = "The untuned v1 chased goal shocks on night one (−110); every trade since the live re-tune is included in the tuned figure. All entries are on-chain provable.";
   }
-  let verified = 0;
+  let verified = 0, totalRefs = 0;
   for (const p of state.positions) {
-    if (p.entry?.verification === "verified") verified++;
-    if (p.exit?.verification === "verified") verified++;
+    for (const side of [p.entry, p.exit]) {
+      if (!side) continue;
+      totalRefs++;
+      if (side.verification === "verified") verified++;
+    }
   }
-  $("s-verified").textContent = verified;
+  $("s-verified").textContent = `${verified}/${totalRefs}`;
+  $("s-verified").className = "v " + (totalRefs && verified === totalRefs ? "up" : "");
   $("s-pending").textContent = state.pendingVerifications;
+  if (state.integrity) {
+    const i = state.integrity;
+    $("s-integrity").textContent = i.ok + i.fail ? `${i.ok}/${i.ok + i.fail}` : "—";
+    $("s-integrity").className = "v " + (i.fail ? "down" : i.ok ? "up" : "");
+  }
 
   $("fixtures").innerHTML = state.fixtures.map(({ fixture: f, latest1x2: l }) => {
     const bars = l ? l.names.map((n, i) => `

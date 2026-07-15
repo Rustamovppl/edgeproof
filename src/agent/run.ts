@@ -197,6 +197,8 @@ app.get("/api/state", (_req, res) => {
     .filter((x) => !REPLAY_FILE || x.latest1x2)
     // the dashboard is a World Cup product: hide friendlies unless they have live prices
     .filter((x) => x.fixture.Competition === "World Cup" || x.latest1x2)
+    // hide long-finished matches with no price data — nothing to look at
+    .filter((x) => x.latest1x2 || x.fixture.StartTime > Date.now() - 6 * 3600 * 1000)
     .sort((a, b) => a.fixture.StartTime - b.fixture.StartTime);
 
   // The strategy was re-tuned live at 2026-07-11 22:13:58Z after the first
@@ -211,6 +213,7 @@ app.get("/api/state", (_req, res) => {
     replay: Boolean(REPLAY_FILE),
     pnlBefore,
     pnlTuned,
+    integrity,
     now: Date.now(),
     totalTicks: store.totalTicks,
     pendingVerifications: verifier.pendingCount(),
@@ -229,6 +232,36 @@ app.get("/events", (req, res) => {
 });
 
 // ---------- boot ----------
+// Continuous feed-integrity sampling: beyond proving its own decisions, the
+// agent spot-checks random ticks from the raw feed against the on-chain
+// roots, so oracle tampering would surface even on ticks it never traded.
+const integrity = { ok: 0, fail: 0, lastMessageId: "", lastCheckedAt: 0 };
+
+async function sampleFeedIntegrity() {
+  const fixtureIds = store.fixtureIds();
+  if (!fixtureIds.length) return;
+  const fid = fixtureIds[Math.floor(Math.random() * fixtureIds.length)];
+  const markets = store.marketsOf(fid);
+  if (!markets.length) return;
+  const hist = store.marketHistory(fid, markets[Math.floor(Math.random() * markets.length)]);
+  // proofs exist only once the tick's 5-minute interval root is published
+  const provable = hist.filter((t) => t.Ts < Date.now() - 7 * 60 * 1000);
+  const tick = provable[Math.floor(Math.random() * provable.length)];
+  if (!tick) return;
+  try {
+    const validation = await txline.oddsValidation(tick.MessageId, tick.Ts);
+    const result = await validator.validateOdds(validation);
+    if (!result.ok) throw new Error(result.error ?? "simulation failed");
+    integrity.ok++;
+    integrity.lastMessageId = tick.MessageId;
+    integrity.lastCheckedAt = Date.now();
+    broadcast({ type: "status", msg: `integrity check OK — random tick ${tick.MessageId} matches the on-chain root` });
+  } catch (e: any) {
+    integrity.fail++;
+    broadcast({ type: "status", msg: `integrity check FAILED for ${tick.MessageId}: ${e.message?.slice(0, 120)}` });
+  }
+}
+
 /** The verification queue lives in memory — re-enqueue unproven ticks after a restart. */
 function requeuePendingProofs() {
   for (const pos of ledger.all()) {
@@ -248,6 +281,7 @@ async function main() {
   await refreshFixtures();
   setInterval(refreshFixtures, 10 * 60 * 1000);
   setInterval(sweepStalePositions, 60 * 1000);
+  setInterval(() => sampleFeedIntegrity().catch(() => {}), 5 * 60 * 1000);
   verifier.start();
   requeuePendingProofs();
 
