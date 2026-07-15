@@ -63,7 +63,23 @@ function tickRef(tick: Tick, outcomeIdx: number): TickRef {
   };
 }
 
+// Suspension ticks (empty prices) on a 1X2 market mean the oracle paused the
+// market — a goal, VAR review, or kick-off. Narrate it, throttled per fixture.
+const lastSuspensionNote = new Map<number, number>();
+
 function onTick(tick: Tick) {
+  if (
+    tick.SuperOddsType === "1X2_PARTICIPANT_RESULT" &&
+    !tick.Prices?.length &&
+    Date.now() - (lastSuspensionNote.get(tick.FixtureId) ?? 0) > 90_000
+  ) {
+    lastSuspensionNote.set(tick.FixtureId, Date.now());
+    const f = fixtures.get(tick.FixtureId);
+    broadcast({
+      type: "status",
+      msg: `market suspended at ${f ? `${f.Participant1}–${f.Participant2}` : tick.FixtureId} — possible goal, VAR or period change`,
+    });
+  }
   store.record(tick);
   broadcast({ type: "tick", tick });
 
@@ -177,21 +193,28 @@ app.get("/api/state", (_req, res) => {
       const ft = store.latest(f.FixtureId, FT_1X2);
       const et = store.latest(f.FixtureId, ET_1X2);
       const latest = et && (!ft || et.Ts > ft.Ts) ? et : ft;
-      return latest
-        ? {
-            fixture: f,
-            latest1x2: {
-              names: latest.PriceNames.map((n) => outcomeName(f, n)),
-              pct: latest.Pct.map(parseFloat),
-              odds: latest.Prices.map((p) => p / 1000),
-              ts: latest.Ts,
-              messageId: latest.MessageId,
-              inRunning: latest.InRunning,
-              gameState: latest.GameState,
-              period: latest === et ? "extra time" : "full time",
-            },
-          }
-        : { fixture: f, latest1x2: null };
+      if (!latest) return { fixture: f, latest1x2: null };
+
+      // downsampled per-outcome probability history for the card sparklines
+      const hist = store.marketHistory(f.FixtureId, latest === et ? ET_1X2 : FT_1X2);
+      const step = Math.max(1, Math.floor(hist.length / 40));
+      const sampled = hist.filter((_, i) => i % step === 0 || i === hist.length - 1);
+      const spark = latest.PriceNames.map((_, oi) => sampled.map((t) => parseFloat(t.Pct[oi])));
+
+      return {
+        fixture: f,
+        latest1x2: {
+          names: latest.PriceNames.map((n) => outcomeName(f, n)),
+          pct: latest.Pct.map(parseFloat),
+          odds: latest.Prices.map((p) => p / 1000),
+          spark,
+          ts: latest.Ts,
+          messageId: latest.MessageId,
+          inRunning: latest.InRunning,
+          gameState: latest.GameState,
+          period: latest === et ? "extra time" : "full time",
+        },
+      };
     })
     // in replay mode, show only the matches actually being replayed
     .filter((x) => !REPLAY_FILE || x.latest1x2)

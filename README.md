@@ -2,6 +2,10 @@
 
 **A trading agent that can prove every price it acted on.**
 
+![proofs](https://img.shields.io/badge/on--chain_proofs-28%2F28-2ea043) ![pnl](https://img.shields.io/badge/live_paper_P%26L-%2B33.6u-2ea043) ![network](https://img.shields.io/badge/solana-devnet-3987e5) ![demo](https://img.shields.io/badge/live_demo-edgeproof--ybjt.onrender.com-3987e5)
+
+![EdgeProof dashboard](docs/dashboard.png)
+
 EdgeProof trades live World Cup odds from the [TxLINE oracle](https://txline.txodds.com/documentation/worldcup) — and anchors every decision to the Solana blockchain. Each price tick the agent acts on is cryptographically verified against the Merkle roots that TxODDS commits on-chain every five minutes. You don't have to trust the agent's journal: **anyone can re-verify it, tick by tick, with one command.**
 
 Built for the TxODDS × Solana World Cup Hackathon (Trading Tools & Agents track).

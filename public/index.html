@@ -149,6 +149,8 @@
   .bar .row .name { color: var(--ink-2); font-weight: 500; }
   .bar .row .val { font: 600 12.5px var(--mono); font-variant-numeric: tabular-nums; }
   .bar .row .val small { color: var(--muted); font-weight: 400; margin-left: 4px; }
+  .bar .row .spark { flex: 1; margin: 0 12px; min-width: 40px; max-width: 130px; height: 16px; align-self: center; }
+  .bar .row .spark polyline { fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; opacity: .85; }
   .bar .track { background: var(--surface-2); border-radius: 3px; height: 6px; overflow: hidden; }
   .bar .fill { background: var(--accent); height: 100%; border-radius: 3px; transition: width .7s cubic-bezier(.4,0,.2,1); }
   .quiet { color: var(--muted); font-size: 13px; }
@@ -288,6 +290,17 @@ function startLabel(f, l) {
   return `<span class="pill soon">${new Date(f.StartTime).toUTCString().slice(0, 22)} UTC</span>`;
 }
 
+function sparkline(series) {
+  if (!series || series.length < 3) return "";
+  const w = 130, h = 16, pad = 1.5;
+  let min = Math.min(...series), max = Math.max(...series);
+  if (max - min < 0.6) { const mid = (max + min) / 2; min = mid - 0.3; max = mid + 0.3; }
+  const pts = series.map((v, i) =>
+    `${(pad + (i * (w - 2 * pad)) / (series.length - 1)).toFixed(1)},${(h - pad - ((v - min) * (h - 2 * pad)) / (max - min)).toFixed(1)}`
+  ).join(" ");
+  return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true"><polyline points="${pts}"/></svg>`;
+}
+
 function proofChip(ref) {
   if (!ref) return '<span class="quiet">—</span>';
   if (ref.verification === "verified")
@@ -329,6 +342,7 @@ function render(state) {
       <div class="bar">
         <div class="row">
           <span class="name">${n}</span>
+          ${sparkline(l.spark && l.spark[i])}
           <span class="val">${num(l.pct[i])}%<small>· ${num(l.odds[i], 2)}</small></span>
         </div>
         <div class="track"><div class="fill" style="width:${Math.min(100, l.pct[i])}%"></div></div>
