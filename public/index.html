@@ -26,7 +26,9 @@
     --warn-chip: #8a6002;
     --down: #c53030;
     --down-chip-bg: rgba(208, 59, 59, 0.10);
+    --s1: #2a78d6; --s2: #1baf7a; --s3: #eda100;
     --glow: transparent;
+    --gridline: rgba(11, 11, 11, 0.028);
     --shadow: 0 1px 2px rgba(11,11,11,.04), 0 8px 24px -12px rgba(11,11,11,.10);
     --mono: ui-monospace, "SF Mono", SFMono-Regular, Menlo, Consolas, monospace;
     --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, system-ui, sans-serif;
@@ -52,7 +54,9 @@
       --warn-chip: #fab219;
       --down: #e66767;
       --down-chip-bg: rgba(230, 103, 103, 0.12);
+      --s1: #3987e5; --s2: #199e70; --s3: #c98500;
       --glow: radial-gradient(60% 40% at 50% -10%, rgba(57,135,229,.10), transparent 70%);
+      --gridline: rgba(255, 255, 255, 0.025);
       --shadow: none;
     }
   }
@@ -60,8 +64,12 @@
   html { scrollbar-gutter: stable; }
   body {
     background: var(--plane);
-    background-image: var(--glow);
-    background-repeat: no-repeat;
+    background-image:
+      var(--glow),
+      linear-gradient(var(--gridline) 1px, transparent 1px),
+      linear-gradient(90deg, var(--gridline) 1px, transparent 1px);
+    background-size: auto, 52px 52px, 52px 52px;
+    background-repeat: no-repeat, repeat, repeat;
     color: var(--ink);
     font: 14px/1.5 var(--sans);
     -webkit-font-smoothing: antialiased;
@@ -95,6 +103,15 @@
   .pill.live::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: currentColor; animation: pulse 1.8s ease-in-out infinite; }
   @keyframes pulse { 50% { opacity: .3; } }
   .pill.soon { background: var(--surface-2); color: var(--ink-2); }
+  /* Merkle interval pulse — the heartbeat of the proof system */
+  .interval { width: 100%; display: flex; align-items: center; gap: 12px; margin-top: 2px; }
+  .interval .lbl { font: 500 11px var(--mono); color: var(--muted); letter-spacing: .02em; white-space: nowrap; }
+  .interval .lbl b { color: var(--ink-2); font-weight: 600; }
+  .int-track { flex: 1; height: 3px; background: var(--surface-2); border-radius: 2px; overflow: hidden; }
+  #int-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 1s linear; }
+  .interval.flash #int-fill { background: var(--up-chip); }
+  .interval.flash .lbl { color: var(--up-chip); }
+
   .how { width: 100%; }
   .how summary { cursor: pointer; color: var(--muted); font-size: 12.5px; user-select: none; width: fit-content; }
   .how summary:hover { color: var(--ink-2); }
@@ -149,8 +166,11 @@
   .bar .row .name { color: var(--ink-2); font-weight: 500; }
   .bar .row .val { font: 600 12.5px var(--mono); font-variant-numeric: tabular-nums; }
   .bar .row .val small { color: var(--muted); font-weight: 400; margin-left: 4px; }
-  .bar .row .spark { flex: 1; margin: 0 12px; min-width: 40px; max-width: 130px; height: 16px; align-self: center; }
-  .bar .row .spark polyline { fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-linejoin: round; stroke-linecap: round; opacity: .85; }
+  .hero-chart { width: 100%; height: 128px; margin: 4px 0 14px; display: block; }
+  .hero-chart polyline { fill: none; stroke-width: 1.8; stroke-linejoin: round; stroke-linecap: round; }
+  .hero-chart .base { stroke: var(--grid); stroke-width: 1; }
+  .hero-chart text { font: 600 10px var(--mono); }
+  .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; margin-right: 7px; vertical-align: 1px; }
   .bar .track { background: var(--surface-2); border-radius: 3px; height: 6px; overflow: hidden; }
   .bar .fill { background: var(--accent); height: 100%; border-radius: 3px; transition: width .7s cubic-bezier(.4,0,.2,1); }
   .quiet { color: var(--muted); font-size: 13px; }
@@ -223,6 +243,10 @@
     <span class="pill live" id="replay-pill" style="display:none" title="Replaying a recorded live World Cup match through the real pipeline — every proof still verifies against the permanent on-chain roots">▶ replay of a recorded live match</span>
     <span class="chip-net">solana devnet</span>
   </div>
+  <div class="interval" title="TxODDS batches every odds update into 5-minute Merkle trees and commits each root to Solana — this is that cadence, live">
+    <span class="lbl" id="int-label">next on-chain root commit in <b>—</b></span>
+    <div class="int-track"><div id="int-fill" style="width:0%"></div></div>
+  </div>
   <details class="how">
     <summary>How it works</summary>
     <p>
@@ -290,16 +314,58 @@ function startLabel(f, l) {
   return `<span class="pill soon">${new Date(f.StartTime).toUTCString().slice(0, 22)} UTC</span>`;
 }
 
-function sparkline(series) {
-  if (!series || series.length < 3) return "";
-  const w = 130, h = 16, pad = 1.5;
-  let min = Math.min(...series), max = Math.max(...series);
-  if (max - min < 0.6) { const mid = (max + min) / 2; min = mid - 0.3; max = mid + 0.3; }
-  const pts = series.map((v, i) =>
-    `${(pad + (i * (w - 2 * pad)) / (series.length - 1)).toFixed(1)},${(h - pad - ((v - min) * (h - 2 * pad)) / (max - min)).toFixed(1)}`
-  ).join(" ");
-  return `<svg class="spark" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true"><polyline points="${pts}"/></svg>`;
+const SERIES = ["var(--s1)", "var(--s2)", "var(--s3)"];
+
+/* Multi-line probability chart with direct value labels, no axes clutter. */
+function heroChart(spark) {
+  if (!spark || !spark[0] || spark[0].length < 3) return "";
+  const w = 560, h = 128, padX = 4, padT = 8, padB = 6, labelW = 44;
+  const all = spark.flat().filter(Number.isFinite);
+  if (!all.length) return "";
+  let min = Math.min(...all), max = Math.max(...all);
+  if (max - min < 3) { const mid = (max + min) / 2; min = mid - 1.5; max = mid + 1.5; }
+  const X = (i, n) => padX + (i * (w - padX * 2 - labelW)) / (n - 1);
+  const Y = (v) => padT + (h - padT - padB) * (1 - (v - min) / (max - min));
+
+  const lines = spark.map((s, si) => {
+    const pts = s.map((v, i) => `${X(i, s.length).toFixed(1)},${Y(v).toFixed(1)}`).join(" ");
+    return `<polyline points="${pts}" stroke="${SERIES[si]}"/>`;
+  });
+
+  // direct labels at line ends, nudged apart so they never collide
+  const ends = spark
+    .map((s, si) => ({ si, v: s[s.length - 1], y: Y(s[s.length - 1]) }))
+    .sort((a, b) => a.y - b.y);
+  for (let i = 1; i < ends.length; i++) {
+    if (ends[i].y - ends[i - 1].y < 12) ends[i].y = ends[i - 1].y + 12;
+  }
+  const labels = ends.map((e) =>
+    `<text x="${w - 2}" y="${Math.min(h - 2, e.y + 3.5).toFixed(1)}" text-anchor="end" fill="${SERIES[e.si]}">${e.v.toFixed(1)}</text>`
+  );
+
+  return `<svg class="hero-chart" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true">
+    <line class="base" x1="0" y1="${h - 1}" x2="${w}" y2="${h - 1}"/>
+    ${lines.join("")}${labels.join("")}</svg>`;
 }
+
+/* Merkle-interval heartbeat: TxODDS commits a root every 5 UTC minutes. */
+function tickInterval() {
+  const P = 300_000;
+  const into = Date.now() % P;
+  const left = P - into;
+  const m = Math.floor(left / 60000), s = Math.floor((left % 60000) / 1000);
+  const bar = document.querySelector(".interval");
+  $("int-fill").style.width = ((into / P) * 100).toFixed(1) + "%";
+  if (left > P - 4000) {
+    bar.classList.add("flash");
+    $("int-label").innerHTML = "on-chain root committed ✓";
+  } else {
+    bar.classList.remove("flash");
+    $("int-label").innerHTML = `next on-chain root commit in <b>${m}:${String(s).padStart(2, "0")}</b>`;
+  }
+}
+setInterval(tickInterval, 1000);
+tickInterval();
 
 function proofChip(ref) {
   if (!ref) return '<span class="quiet">—</span>';
@@ -341,17 +407,16 @@ function render(state) {
     const bars = l ? l.names.map((n, i) => `
       <div class="bar">
         <div class="row">
-          <span class="name">${n}</span>
-          ${sparkline(l.spark && l.spark[i])}
+          <span class="name"><span class="dot" style="background:${SERIES[i]}"></span>${n}</span>
           <span class="val">${num(l.pct[i])}%<small>· ${num(l.odds[i], 2)}</small></span>
         </div>
-        <div class="track"><div class="fill" style="width:${Math.min(100, l.pct[i])}%"></div></div>
+        <div class="track"><div class="fill" style="width:${Math.min(100, l.pct[i])}%;background:${SERIES[i]}"></div></div>
       </div>`).join("")
       : '<div class="quiet">No prices yet — the oracle starts publishing closer to kick-off.</div>';
     return `<div class="card">
       <h3>${f.Participant1} — ${f.Participant2}</h3>
       <div class="meta"><span>${f.Competition}</span>${startLabel(f, l)}${l && l.period === "extra time" ? '<span class="pill soon">extra time</span>' : ""}${l ? `<span>updated ${fmtTime(l.ts)}</span>` : ""}</div>
-      ${bars}</div>`;
+      ${l ? heroChart(l.spark) : ""}${bars}</div>`;
   }).join("");
 
   const rows = state.positions;
