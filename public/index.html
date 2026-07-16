@@ -302,7 +302,8 @@ const fmtTime = (ts) => new Date(ts).toISOString().slice(11, 19) + "Z";
 const num = (v, d = 1) => (Number.isFinite(v) ? v.toFixed(d) : "?");
 const explorer = (acc) => `https://explorer.solana.com/address/${acc}?cluster=devnet`;
 
-function startLabel(f, l) {
+function startLabel(f, l, replay) {
+  if (replay && l) return `<span class="pill live">▶ replaying</span>`;
   const started = Date.now() > f.StartTime;
   if (started && l && Date.now() - l.ts > 90 * 60 * 1000) return `<span class="pill soon">ended</span>`;
   if (started && l && l.inRunning) return `<span class="pill live">live</span>`;
@@ -415,7 +416,7 @@ function render(state) {
       : '<div class="quiet">No prices yet — the oracle starts publishing closer to kick-off.</div>';
     return `<div class="card">
       <h3>${f.Participant1} — ${f.Participant2}</h3>
-      <div class="meta"><span>${f.Competition}</span>${startLabel(f, l)}${l && l.period === "extra time" ? '<span class="pill soon">extra time</span>' : ""}${l ? `<span>updated ${fmtTime(l.ts)}</span>` : ""}</div>
+      <div class="meta"><span>${f.Competition}</span>${startLabel(f, l, state.replay)}${l && l.period === "extra time" ? '<span class="pill soon">extra time</span>' : ""}${l ? `<span>${state.replay ? "rec " : "updated "}${fmtTime(l.ts)}</span>` : ""}</div>
       ${l ? heroChart(l.spark) : ""}${bars}</div>`;
   }).join("");
 
@@ -425,7 +426,7 @@ function render(state) {
     const pnlCell = p.pnl === undefined ? '<span class="quiet">open</span>'
       : `<span class="pnl ${p.pnl >= 0 ? "up" : "down"}">${p.pnl > 0 ? "↑ +" : p.pnl < 0 ? "↓ " : ""}${p.pnl}</span>`;
     return `<tr>
-      <td class="num">${fmtTime(p.openedAt)}</td>
+      <td class="num">${fmtTime(p.entry?.ts ?? p.openedAt)}</td>
       <td>${p.fixtureName}</td>
       <td><b>${p.outcomeName}</b> · ${p.stake}u</td>
       <td class="num">${num(p.entry.pct)}% @ ${num(p.entry.odds, 2)}</td>
