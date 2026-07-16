@@ -1,0 +1,287 @@
+{
+  "auditedAt": "2026-07-16T13:02:58.971Z",
+  "verified": 28,
+  "total": 28,
+  "rows": [
+    {
+      "position": "Argentina vs Switzerland · Argentina · entry",
+      "side": "entry",
+      "messageId": "1837384312:00003:000240-10021-stab",
+      "ts": 1783821119524,
+      "claimedPct": 79.808,
+      "result": "OK",
+      "rootsAccount": "6EzehK1s1Kx82jNex5PpB3mqGGmUwSaxxW7C1D5ueZgR",
+      "cu": 263243
+    },
+    {
+      "position": "Argentina vs Switzerland · Argentina · exit",
+      "side": "exit",
+      "messageId": "1837384727:00003:000007-10021-stab",
+      "ts": 1783821359061,
+      "claimedPct": 77.519,
+      "result": "OK",
+      "rootsAccount": "6EzehK1s1Kx82jNex5PpB3mqGGmUwSaxxW7C1D5ueZgR",
+      "cu": 249506
+    },
+    {
+      "position": "Argentina vs Switzerland · Switzerland · entry",
+      "side": "entry",
+      "messageId": "1837388775:00003:000101-10021-stab",
+      "ts": 1783823662347,
+      "claimedPct": 6.803,
+      "result": "OK",
+      "rootsAccount": "6EzehK1s1Kx82jNex5PpB3mqGGmUwSaxxW7C1D5ueZgR",
+      "cu": 276980
+    },
+    {
+      "position": "Argentina vs Switzerland · Switzerland · exit",
+      "side": "exit",
+      "messageId": "1837388975:00003:000154-10021-stab",
+      "ts": 1783823773756,
+      "claimedPct": 4.739,
+      "result": "OK",
+      "rootsAccount": "6EzehK1s1Kx82jNex5PpB3mqGGmUwSaxxW7C1D5ueZgR",
+      "cu": 290708
+    },
+    {
+      "position": "Argentina vs Switzerland · Argentina (extra time) · entry",
+      "side": "entry",
+      "messageId": "1837389541:00003:000516-10021-stab",
+      "ts": 1783824101848,
+      "claimedPct": 53.022,
+      "result": "OK",
+      "rootsAccount": "6EzehK1s1Kx82jNex5PpB3mqGGmUwSaxxW7C1D5ueZgR",
+      "cu": 290956
+    },
+    {
+      "position": "Argentina vs Switzerland · Argentina (extra time) · exit",
+      "side": "exit",
+      "messageId": "1837391981:00003:000155-10021-stab",
+      "ts": 1783825541245,
+      "claimedPct": 58.072,
+      "result": "OK",
+      "rootsAccount": "6EzehK1s1Kx82jNex5PpB3mqGGmUwSaxxW7C1D5ueZgR",
+      "cu": 290959
+    },
+    {
+      "position": "Argentina vs Switzerland · Draw · entry",
+      "side": "entry",
+      "messageId": "1837389621:00003:000287-10021-stab",
+      "ts": 1783824149660,
+      "claimedPct": 51.653,
+      "result": "OK",
+      "rootsAccount": "6EzehK1s1Kx82jNex5PpB3mqGGmUwSaxxW7C1D5ueZgR",
+      "cu": 290713
+    },
+    {
+      "position": "Argentina vs Switzerland · Draw · exit",
+      "side": "exit",
+      "messageId": "1837389935:00003:000026-10021-stab",
+      "ts": 1783824318039,
+      "claimedPct": 56.689,
+      "result": "OK",
+      "rootsAccount": "6EzehK1s1Kx82jNex5PpB3mqGGmUwSaxxW7C1D5ueZgR",
+      "cu": 290711
+    },
+    {
+      "position": "Argentina vs Switzerland · Switzerland (extra time) · entry",
+      "side": "entry",
+      "messageId": "1837390192:00003:000591-10021-stab",
+      "ts": 1783824464630,
+      "claimedPct": 7.813,
+      "result": "OK",
+      "rootsAccount": "6EzehK1s1Kx82jNex5PpB3mqGGmUwSaxxW7C1D5ueZgR",
+      "cu": 290958
+    },
+    {
+      "position": "Argentina vs Switzerland · Switzerland (extra time) · exit",
+      "side": "exit",
+      "messageId": "1837391610:00003:000106-10021-stab",
+      "ts": 1783825322192,
+      "claimedPct": 5.587,
+      "result": "OK",
+      "rootsAccount": "6EzehK1s1Kx82jNex5PpB3mqGGmUwSaxxW7C1D5ueZgR",
+      "cu": 277222
+    },
+    {
+      "position": "Argentina vs Switzerland · Argentina (extra time) · entry",
+      "side": "entry",
+      "messageId": "1837391981:00003:000155-10021-stab",
+      "ts": 1783825541245,
+      "claimedPct": 58.072,
+      "result": "OK",
+      "rootsAccount": "6EzehK1s1Kx82jNex5PpB3mqGGmUwSaxxW7C1D5ueZgR",
+      "cu": 290959
+    },
+    {
+      "position": "Argentina vs Switzerland · Argentina (extra time) · exit",
+      "side": "exit",
+      "messageId": "1837392692:00003:000031-10021-stab",
+      "ts": 1783825936039,
+      "claimedPct": 55.991,
+      "result": "OK",
+      "rootsAccount": "6EzehK1s1Kx82jNex5PpB3mqGGmUwSaxxW7C1D5ueZgR",
+      "cu": 290955
+    },
+    {
+      "position": "Argentina vs Switzerland · Draw (extra time) · entry",
+      "side": "entry",
+      "messageId": "1837392738:00003:000158-10021-stab",
+      "ts": 1783825962377,
+      "claimedPct": 41.203,
+      "result": "OK",
+      "rootsAccount": "6EzehK1s1Kx82jNex5PpB3mqGGmUwSaxxW7C1D5ueZgR",
+      "cu": 290955
+    },
+    {
+      "position": "Argentina vs Switzerland · Draw (extra time) · exit",
+      "side": "exit",
+      "messageId": "1837393232:00003:000294-10021-stab",
+      "ts": 1783826238283,
+      "claimedPct": 46.232,
+      "result": "OK",
+      "rootsAccount": "6EzehK1s1Kx82jNex5PpB3mqGGmUwSaxxW7C1D5ueZgR",
+      "cu": 290953
+    },
+    {
+      "position": "Argentina vs Switzerland · Draw (extra time) · entry",
+      "side": "entry",
+      "messageId": "1837393903:00003:000015-10021-stab",
+      "ts": 1783826627016,
+      "claimedPct": 51.151,
+      "result": "OK",
+      "rootsAccount": "6EzehK1s1Kx82jNex5PpB3mqGGmUwSaxxW7C1D5ueZgR",
+      "cu": 277224
+    },
+    {
+      "position": "Argentina vs Switzerland · Draw (extra time) · exit",
+      "side": "exit",
+      "messageId": "1837394375:00003:000424-10021-stab",
+      "ts": 1783826894680,
+      "claimedPct": 56.18,
+      "result": "OK",
+      "rootsAccount": "6EzehK1s1Kx82jNex5PpB3mqGGmUwSaxxW7C1D5ueZgR",
+      "cu": 277220
+    },
+    {
+      "position": "Argentina vs Switzerland · Draw (extra time) · entry",
+      "side": "entry",
+      "messageId": "1837394375:00003:000424-10021-stab",
+      "ts": 1783826894680,
+      "claimedPct": 56.18,
+      "result": "OK",
+      "rootsAccount": "6EzehK1s1Kx82jNex5PpB3mqGGmUwSaxxW7C1D5ueZgR",
+      "cu": 277220
+    },
+    {
+      "position": "Argentina vs Switzerland · Draw (extra time) · exit",
+      "side": "exit",
+      "messageId": "1837394673:00003:000521-10021-stab",
+      "ts": 1783827069800,
+      "claimedPct": 61.237,
+      "result": "OK",
+      "rootsAccount": "6EzehK1s1Kx82jNex5PpB3mqGGmUwSaxxW7C1D5ueZgR",
+      "cu": 263487
+    },
+    {
+      "position": "France vs Spain · France · entry",
+      "side": "entry",
+      "messageId": "1837784161:00003:000270-10021-stab",
+      "ts": 1784057376465,
+      "claimedPct": 20.227,
+      "result": "OK",
+      "rootsAccount": "9CrnWb2ZBtxX3B2C7GUDacb8AnjvySjyDtci7uy4gdoH",
+      "cu": 321195
+    },
+    {
+      "position": "France vs Spain · France · exit",
+      "side": "exit",
+      "messageId": "1837784726:00003:000237-10021-stab",
+      "ts": 1784057684412,
+      "claimedPct": 18.192,
+      "result": "OK",
+      "rootsAccount": "9CrnWb2ZBtxX3B2C7GUDacb8AnjvySjyDtci7uy4gdoH",
+      "cu": 321193
+    },
+    {
+      "position": "France vs Spain · Draw · entry",
+      "side": "entry",
+      "messageId": "1837784161:00003:000270-10021-stab",
+      "ts": 1784057376465,
+      "claimedPct": 27.996,
+      "result": "OK",
+      "rootsAccount": "9CrnWb2ZBtxX3B2C7GUDacb8AnjvySjyDtci7uy4gdoH",
+      "cu": 321195
+    },
+    {
+      "position": "France vs Spain · Draw · exit",
+      "side": "exit",
+      "messageId": "1837789094:00003:000455-10021-stab",
+      "ts": 1784060077006,
+      "claimedPct": 28.114,
+      "result": "OK",
+      "rootsAccount": "9CrnWb2ZBtxX3B2C7GUDacb8AnjvySjyDtci7uy4gdoH",
+      "cu": 293725
+    },
+    {
+      "position": "France vs Spain · Spain · entry",
+      "side": "entry",
+      "messageId": "1837784971:00003:000184-10021-stab",
+      "ts": 1784057821291,
+      "claimedPct": 54.555,
+      "result": "OK",
+      "rootsAccount": "9CrnWb2ZBtxX3B2C7GUDacb8AnjvySjyDtci7uy4gdoH",
+      "cu": 307461
+    },
+    {
+      "position": "France vs Spain · Spain · exit",
+      "side": "exit",
+      "messageId": "1837787920:00003:000101-10021-stab",
+      "ts": 1784059442081,
+      "claimedPct": 52.438,
+      "result": "OK",
+      "rootsAccount": "9CrnWb2ZBtxX3B2C7GUDacb8AnjvySjyDtci7uy4gdoH",
+      "cu": 266249
+    },
+    {
+      "position": "France vs Spain · Spain · entry",
+      "side": "entry",
+      "messageId": "1837788991:00003:000508-10021-stab",
+      "ts": 1784060022761,
+      "claimedPct": 55.897,
+      "result": "OK",
+      "rootsAccount": "9CrnWb2ZBtxX3B2C7GUDacb8AnjvySjyDtci7uy4gdoH",
+      "cu": 293725
+    },
+    {
+      "position": "France vs Spain · Spain · exit",
+      "side": "exit",
+      "messageId": "1837789746:00003:000021-10021-stab",
+      "ts": 1784060420024,
+      "claimedPct": 85.985,
+      "result": "OK",
+      "rootsAccount": "9CrnWb2ZBtxX3B2C7GUDacb8AnjvySjyDtci7uy4gdoH",
+      "cu": 293720
+    },
+    {
+      "position": "France vs Spain · Spain · entry",
+      "side": "entry",
+      "messageId": "1837790775:00003:000066-10021-stab",
+      "ts": 1784060972053,
+      "claimedPct": 88.731,
+      "result": "OK",
+      "rootsAccount": "9CrnWb2ZBtxX3B2C7GUDacb8AnjvySjyDtci7uy4gdoH",
+      "cu": 307459
+    },
+    {
+      "position": "France vs Spain · Spain · exit",
+      "side": "exit",
+      "messageId": "1837792893:00003:000001-10021-stab",
+      "ts": 1784062178952,
+      "claimedPct": 96.061,
+      "result": "OK",
+      "rootsAccount": "9CrnWb2ZBtxX3B2C7GUDacb8AnjvySjyDtci7uy4gdoH",
+      "cu": 293723
+    }
+  ]
+}
