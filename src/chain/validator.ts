@@ -45,6 +45,20 @@ export class ChainValidator {
     this.program = new Program<Txoracle>(TxoracleJson as unknown as Txoracle, provider);
   }
 
+  // Simulations don't need a fresh blockhash every call — cache it briefly
+  // to halve RPC traffic (the public devnet endpoint rate-limits bursts).
+  private blockhash?: { value: string; fetchedAt: number };
+
+  private async cachedBlockhash(): Promise<string> {
+    if (!this.blockhash || Date.now() - this.blockhash.fetchedAt > 20_000) {
+      this.blockhash = {
+        value: (await this.connection.getLatestBlockhash()).blockhash,
+        fetchedAt: Date.now(),
+      };
+    }
+    return this.blockhash.value;
+  }
+
   /** Build (or refresh) the epochDay -> DailyOddsMerkleRoots account map. */
   async refreshOddsRootsMap(): Promise<void> {
     const accounts = await this.connection.getProgramAccounts(this.program.programId, {
@@ -118,7 +132,7 @@ export class ChainValidator {
         .transaction();
 
       tx.feePayer = this.wallet.publicKey;
-      tx.recentBlockhash = (await this.connection.getLatestBlockhash()).blockhash;
+      tx.recentBlockhash = await this.cachedBlockhash();
 
       const sim = await this.connection.simulateTransaction(tx);
       if (sim.value.err) {

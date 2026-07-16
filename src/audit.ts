@@ -50,6 +50,8 @@ async function main() {
   console.log(`EdgeProof audit — re-verifying ${refs.length} price ticks behind ${positions.size} decisions\n`);
 
   for (const { pos, side, ref } of refs) {
+    // pace the loop: the public devnet RPC rate-limits bursts of simulations
+    await new Promise((r) => setTimeout(r, 1200));
     const label = `${pos.fixtureName} · ${pos.outcomeName} · ${side}`;
     try {
       const validation = await txline.oddsValidation(ref.messageId, ref.ts);
